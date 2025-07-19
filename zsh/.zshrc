@@ -24,5 +24,10 @@ HISTSIZE=10000
 SAVEHIST=10000
 setopt SHARE_HISTORY
 
+# Keybindings
+bindkey '^e' fzf-history-widget    # [E]xplore history
+bindkey '^f' fzf-file-widget       # [F]ind file
+bindkey '^g' fzf-cd-widget         # [G]o to directory
+
 # Completions `tab`
 autoload -Uz compinit && compinit
