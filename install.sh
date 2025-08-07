@@ -44,7 +44,9 @@ rm -rf "$HOME/.config/ghostty"
 rm -rf "$HOME/.config/nvim"
 
 # Create symlinks
-ln -sf "$DOTFILES/.config/ghostty" "$HOME/.config/ghostty"
+rm -f "$HOME/.config/ghostty"
+rm -f "$HOME/.config/nvim"
+ln -sf "$DOTFILES/ghostty/.config/ghostty" "$HOME/.config/ghostty"
 echo "[OK] ghostty configuration linked successfully!"
-ln -sf "$DOTFILES/.config/nvim" "$HOME/.config/nvim"
+ln -sf "$DOTFILES/nvim/.config/nvim" "$HOME/.config/nvim"
 echo "[OK] nvim configuration linked successfully!"

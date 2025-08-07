@@ -9,6 +9,9 @@ zsh/.zsh/antidote/
 # vsCode
 .vscode/
 
+# notes
+TODO.md
+
 # Vim swap files
 *.swp
 *.swo
