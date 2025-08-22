@@ -1,16 +1,17 @@
 # .gitignore
 
 # Third-party plugins (installed by install.sh)
-zsh/.zsh/antidote/
+zsh/.zsh/antidote
 
 # macOS
 .DS_Store
 
 # vsCode
-.vscode/
+.vscode
 
 # notes
 TODO.md
+_nvim-dist
 
 # Vim swap files
 *.swp
