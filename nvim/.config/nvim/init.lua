@@ -1,7 +1,2 @@
--- Load basic settings before loading plugins
--- Load the options from the config/options.lua file
-require("config.options")
--- Load the keymaps from the config/keymaps.lua file
-require("config.keymaps")
--- Bootstrap lazy.nvim and your plugins
+-- bootstrap lazy.nvim, LazyVim and your plugins
 require("config.lazy")
