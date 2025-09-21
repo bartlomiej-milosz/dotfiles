@@ -1,0 +1,9 @@
+# ~/zsh/.zsh/plugins.txt
+
+# Essential plugins
+zsh-users/zsh-syntax-highlighting
+zsh-users/zsh-autosuggestions
+zsh-users/zsh-history-substring-search
+
+# Pure prompt
+sindresorhus/pure
