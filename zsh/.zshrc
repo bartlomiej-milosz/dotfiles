@@ -5,6 +5,7 @@ source ~/.zsh/antidote/antidote.zsh
 antidote load ~/.zsh/plugins.txt
 
 # FZF shell integration
+# [IMPORTANT] install `fzf` via preffered package manager `brew install fzf` for example
 eval "$(fzf --zsh)"
 
 # Colors for ls

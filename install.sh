@@ -1,27 +1,50 @@
 #!/bin/bash
-# remember to use `$HOME` instead `~`
 
-# detect OS and set proper dotfiles path
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    echo "mac OS detected"
-    DOTFILES="$HOME/Documents/dev/dotfiles"
-else
-    echo "linux detected"
-    DOTFILES="$HOME/dev/dotfiles"
-fi
+# GENERAL SETUP
 
+# Get the directory where this script is located
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# For custom dotfiles directory, specify desired path below
+# Leave empty to use script's directory
+CUSTOM_PATH=""
+DOTFILES="${CUSTOM_PATH:-$SCRIPT_DIR}"
 echo "dotfiles path: $DOTFILES"
 
-# setup `zsh` plugins and `zsh` prompt
-ZSH_UTILS="$DOTFILES/zsh/utils"
+# Reminder to install fzf if not exist
+if ! command -v fzf &> /dev/null; then
+    echo "[IMPORTANT] FZF not found. Install via package manager:"
+    echo "macOS: brew install fzf"
+    echo "Linux: sudo apt/dnf/pacman install fzf"
+fi
 
-# clone latest commit only
+# LINKING DOTFILES
+
+# ZSH
+
+ZSH_UTILS="$DOTFILES/zsh/.zsh"
+
+# Install plugin manager
 rm -rf "$ZSH_UTILS/antidote"
 git clone --depth=1 "https://github.com/mattmc3/antidote.git" "$ZSH_UTILS/antidote"
 
-# finally symlink init file `.zshrc` and config directory `.zsh/`
+# Symlink init file `.zshrc` and config directory `.zsh/`
 rm -rf "$HOME/.zsh"
 rm -f "$HOME/.zshrc"
-ln -sf "$ZSH_UTILS" "$HOME/.zsh"                      # utils/ -> ~/.zsh
-ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"          # .zshrc separately        
-echo "[OK] zsh configuration linked successfully!"    
+ln -sf "$ZSH_UTILS" "$HOME/.zsh"
+ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
+echo "[OK] zsh configuration linked successfully!"
+
+# .CONFIG TOOLS
+
+# Ensure .config exists
+mkdir -p "$HOME/.config"
+
+# Remove specific subdirectories, not entire .config
+rm -rf "$HOME/.config/ghostty"
+rm -rf "$HOME/.config/nvim"
+
+# Create symlinks
+ln -sf "$DOTFILES/.config/ghostty" "$HOME/.config/ghostty"
+echo "[OK] ghostty configuration linked successfully!"
+ln -sf "$DOTFILES/.config/nvim" "$HOME/.config/nvim"
+echo "[OK] nvim configuration linked successfully!"

@@ -1,0 +1,24 @@
+palette = 0=#0E101A
+palette = 1=#E03600
+palette = 2=#5DCD97
+palette = 3=#E39500
+palette = 4=#00A3CB
+palette = 5=#795CCC
+palette = 6=#00A3CB
+palette = 7=#EBEFC0
+palette = 8=#EBEFC0
+palette = 9=#00B4E0
+palette = 10=#00B4E0
+palette = 11=#58DB9E
+palette = 12=#FF4821
+palette = 13=#B3A1E6
+palette = 14=#2B2F46
+palette = 15=#B3B692
+
+# Other settings
+background = #0E101A
+foreground = #EBEFC0
+cursor-color = #EDF2C2
+cursor-text = #EBEFC0
+selection-background = #37382D
+selection-foreground = #EBEFC0

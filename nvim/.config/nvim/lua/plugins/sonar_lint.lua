@@ -1,0 +1,27 @@
+return {
+	-- "https://gitlab.com/schrieveslaach/sonarlint.nvim.git", -- Explicitly define the GitLab repository URL
+	-- lazy = true,
+	-- ft = { "java" }, -- Loads only when a Java file is opened
+	-- event = "BufReadPre", -- Ensures it loads before opening files
+	-- config = function()
+	-- 	require("sonarlint").setup({
+	-- 		server = {
+	-- 			cmd = {
+	-- 				-- vim.fn.expand("$MASON/bin/sonarlint-language-server"),
+	--          "sonarlint-language-server",
+	-- 				"-stdio",
+	-- 				"-analyzers",
+	-- 				vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarjava.jar"),
+	-- 			},
+	-- 			settings = {
+	-- 				sonarlint = {
+	-- 					test = "test",
+	-- 				},
+	-- 			},
+	-- 		},
+	-- 		filetypes = {
+	-- 			"java",
+	-- 		},
+	-- 	})
+	-- end,
+}
