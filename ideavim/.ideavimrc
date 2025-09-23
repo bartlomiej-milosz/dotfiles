@@ -1,0 +1,14 @@
+" Set leader key first
+let mapleader = " "
+
+" IntelliJ-specific actions
+nmap <leader>ff :action SearchEverywhere<CR>
+nmap <A-k> :action MoveLineUp<CR>
+nmap <leader>cf :action ReformatCode<CR>
+nmap <A-j> :action MoveLineDown<CR>
+vmap <A-k> :action MoveLineUp<CR>
+vmap <A-j> :action MoveLineDown<CR>
+
+" Insert blank lines above/below
+nmap <leader>ij o<Esc>
+nmap <leader>ik O<Esc>
