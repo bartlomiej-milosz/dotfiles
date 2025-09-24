@@ -27,7 +27,7 @@ return {
     keys = {
       {
         "<leader>ls",
-        -- Stop
+        -- Stop linter
         function()
           for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
             if client.name == "sonarlint.nvim" then
@@ -38,23 +38,6 @@ return {
           end
         end,
         desc = "Stop SonarLint",
-      },
-      {
-        "<leader>lr",
-        function()
-          -- Stop
-          for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-            if client.name == "sonarlint.nvim" then
-              vim.lsp.stop_client(client.id)
-            end
-          end
-          -- Reopen buffer
-          vim.defer_fn(function()
-            vim.cmd("edit")
-            vim.notify("SonarLint restarted", vim.log.levels.INFO)
-          end, 100)
-        end,
-        desc = "Restart SonarLint",
       },
     },
   },

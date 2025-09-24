@@ -18,5 +18,9 @@ local function map(mode, lhs, rhs, opts)
     end
 end
 
-vim.keymap.set("c", "<C-j>", "<Down>", { desc = "Next completion" })
-vim.keymap.set("c", "<C-k>", "<Up>", { desc = "Previous completion" })
+vim.keymap.set("n", "<F5>", function()
+  vim.cmd("wall")
+  Snacks.terminal("mvn clean compile exec:java", {
+    interactive = false,  -- keeps terminal open after command finishes
+  })
+end, { desc = "Maven run" })
