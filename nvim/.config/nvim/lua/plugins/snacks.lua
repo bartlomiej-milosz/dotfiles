@@ -6,6 +6,7 @@ return {
       sources = {
         -- Configure the explorer
         explorer = {
+          hidden = true,
           exclude = {
             "*.iml",
             "*.class",  -- add more patterns as needed
@@ -14,6 +15,7 @@ return {
         },
         -- Configure the file picker
         files = {
+          hidden = true,
           exclude = {
             "*.iml",
             "*.class",
