@@ -34,6 +34,12 @@ ln -sf "$ZSH_UTILS" "$HOME/.zsh"
 ln -sf "$DOTFILES/zsh/.zshrc" "$HOME/.zshrc"
 echo "[OK] zsh configuration linked successfully!"
 
+# IDEAVIM
+
+rm -rf "$HOME/.ideavimrc"
+ln -sf "$DOTFILES/ideavim/.ideavimrc" "$HOME/.ideavimrc"
+echo "[OK] ideavim configuration linked successfully!"
+
 # .CONFIG TOOLS
 
 # Ensure .config exists
