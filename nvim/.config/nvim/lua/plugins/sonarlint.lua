@@ -18,26 +18,33 @@ return {
             vim.fn.expand("$MASON/share/sonarlint-analyzers/sonarpython.jar"),
           },
         },
-        filetypes = {
-          "java",
-          "python",
-        },
+        filetypes = { "java", "python" },
       })
     end,
     keys = {
       {
         "<leader>ls",
-        -- Stop linter
         function()
-          for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = 0 })) do
-            if client.name == "sonarlint.nvim" then
+          for _, client in ipairs(vim.lsp.get_clients({ bufnr = 0 })) do
+            if client.name:match("sonarlint") then
               vim.lsp.stop_client(client.id)
               vim.notify("SonarLint stopped", vim.log.levels.INFO)
               return
             end
           end
+          vim.notify("SonarLint client not found", vim.log.levels.WARN)
         end,
         desc = "Stop SonarLint",
+      },
+    },
+  },
+
+  -- Mason to install tools
+  {
+    "mason-org/mason.nvim",
+    opts = {
+      ensure_installed = {
+        "sonarlint-language-server",
       },
     },
   },
