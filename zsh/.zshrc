@@ -4,10 +4,6 @@
 source ~/.zsh/antidote/antidote.zsh
 antidote load ~/.zsh/plugins.txt
 
-# Java
-export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
-export PATH="/opt/homebrew/opt/openjdk@21/bin:$PATH"
-
 # FZF shell integration
 # [IMPORTANT] install `fzf` via preffered package manager `brew install fzf` for example
 eval "$(fzf --zsh)"
@@ -36,3 +32,7 @@ bindkey '^g' fzf-cd-widget         # [G]o to directory
 
 # Completions `tab`
 autoload -Uz compinit && compinit
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
