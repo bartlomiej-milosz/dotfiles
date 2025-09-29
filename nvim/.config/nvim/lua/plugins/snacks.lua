@@ -9,8 +9,13 @@ return {
           hidden = true,
           exclude = {
             "*.iml",
-            "*.class",  -- add more patterns as needed
+            "*.class",
             ".DS_Store",
+            ".idea",
+            ".mvn",
+            ".settings",
+            ".classpath",
+            ".project",
           },
         },
         -- Configure the file picker
@@ -20,6 +25,11 @@ return {
             "*.iml",
             "*.class",
             ".DS_Store",
+            ".idea",
+            ".mvn",
+            ".settings",
+            ".classpath",
+            ".project",
           },
         },
       },
