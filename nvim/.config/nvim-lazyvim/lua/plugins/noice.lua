@@ -10,17 +10,17 @@ return {
             view = "cmdline_popup", -- fancy centered popup
         },
         messages = {
-            enabled = true, -- let mini.notify handle messages
+            enabled = true,
         },
         popupmenu = {
             enabled = false, -- let blink.cmp handle this
         },
         notify = {
-            enabled = true, -- let mini.notify handle notifications
+            enabled = true,
         },
         lsp = {
             progress = {
-                enabled = true, -- let mini.notify handle LSP progress
+                enabled = true,
             },
             override = {
                 ["vim.lsp.util.convert_input_to_markdown_lines"] = true,

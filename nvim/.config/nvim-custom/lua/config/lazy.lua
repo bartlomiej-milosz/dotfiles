@@ -5,7 +5,7 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
   if vim.v.shell_error ~= 0 then
     vim.api.nvim_echo({
       { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-      { out, "WarningMsg" },
+      { out,                            "WarningMsg" },
       { "\nPress any key to exit..." },
     }, true, {})
     vim.fn.getchar()
@@ -31,19 +31,28 @@ require("lazy").setup({
   checker = {
     enabled = true, -- check for plugin updates periodically
     notify = false, -- notify on update
-  }, -- automatically check for plugin updates
+  },                -- automatically check for plugin updates
   performance = {
     rtp = {
       -- disable some rtp plugins
       disabled_plugins = {
-        "gzip",
-        -- "matchit",
-        -- "matchparen",
-        -- "netrwPlugin",
-        "tarPlugin",
-        "tohtml",
-        -- "tutor",
-        "zipPlugin",
+        "gzip",          -- Handles compressed files (.gz)
+        "tarPlugin",     -- Handles tar archives
+        "zipPlugin",     -- Handles zip archives
+        "netrw",         -- Old file explorer (disable if using another file manager like nvim-tree)
+        "netrwPlugin",   -- Related to netrw
+        "netrwSettings", -- Settings for netrw
+        "netrwFileHandlers", -- File handlers for netrw
+        "2html_plugin",  -- Converts buffers to HTML
+        "logipat",       -- Legacy Vim pattern matching
+        "rrhelper",      -- Rarely used helper for remote plugins
+        "vimball",       -- Vimball archive support
+        "vimballPlugin", -- Vimball plugin
+        "getscript",     -- Legacy script downloading
+        "getscriptPlugin", -- Plugin for getscript
+        -- "tutor", -- Built-in Vim tutorial
+        "optwin",        -- Optional plugin window
+        "compiler",      -- Compiler plugin (for older Vim setups)
       },
     },
   },
