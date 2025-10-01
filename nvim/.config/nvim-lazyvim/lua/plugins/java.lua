@@ -9,13 +9,6 @@ return {
           format = {
             enabled = false,
           },
-          --   configuration = {
-          --     runtimes = {
-          --       name = "JavaSE-21",
-          --       path = vim.fn.getenv("JAVA_HOME"),
-          --       default = true,
-          --     },
-          --   },
         },
       })
       return opts
