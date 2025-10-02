@@ -1,361 +1,478 @@
-" ============================================================================
-" IDEAVIM CONFIG
-" Save this as ~/.ideavimrc on Linux/Mac or ~/_ideavimrc on Windows
-" ============================================================================
+" =============================================================================
+" IDEAVIM CONFIGURATION FILE
+" =============================================================================
+" Author: Your Name
+" Version: 2.0
+" Last Modified: 2025-01-01
+" Repository: https://github.com/yourusername/dotfiles
+" =============================================================================
 
-" ============================================================================
-" SECTION 1: Basic Vim Settings
-" ============================================================================
+" =============================================================================
+" TABLE OF CONTENTS
+" =============================================================================
+" 1.  CORE SETTINGS ................. Basic Vim behavior
+" 2.  PLUGINS ....................... IdeaVim plugin extensions
+" 3.  LEADER KEY .................... Leader key configuration
+" 4.  WHICH-KEY ..................... Which-key descriptions
+" 5.  KEY MAPPINGS .................. All keybindings
+"     5.1  Navigation ............... Window/buffer navigation
+"     5.2  File Operations ......... File search and exploration
+"     5.3  Code Navigation ......... Go to definition, etc.
+"     5.4  Code Actions ............ Refactoring and formatting
+"     5.5  Git Operations .......... Version control
+"     5.6  Run & Debug ............. Execution and debugging
+"     5.7  Bookmarks ............... Bookmark management
+"     5.8  Tool Windows ............ IDE panels
+" 6.  VISUAL MODE ................... Visual mode specific
+" 7.  UTILITIES ..................... Helper functions and settings
+" =============================================================================
 
-" Show line numbers and make them relative
-set number
-set relativenumber
+" =============================================================================
+" 1. CORE SETTINGS
+" =============================================================================
 
-" Keep inifite lines visible above/below cursor when scrolling
-set scrolloff=999
+" -----------------------------------------------------------------------------
+" Display Settings
+" -----------------------------------------------------------------------------
+set number                      " Show line numbers
+set relativenumber             " Relative line numbers for easier jumps
+set scrolloff=999              " Keep cursor centered vertically
+set showmode                   " Display current mode in status bar
 
-" Search settings
-set ignorecase
-set smartcase
-set incsearch
-set hlsearch
+" -----------------------------------------------------------------------------
+" Search Behavior
+" -----------------------------------------------------------------------------
+set ignorecase                 " Case-insensitive search...
+set smartcase                  " ...unless query contains uppercase
+set incsearch                  " Incremental search highlighting
+set hlsearch                   " Highlight all search matches
+set gdefault                   " Global substitutions by default (/g flag)
 
-" Use system clipboard (allows copy/paste between Vim and other apps)
-set clipboard+=unnamed
-set clipboard+=ideaput
+" -----------------------------------------------------------------------------
+" Clipboard Integration
+" -----------------------------------------------------------------------------
+set clipboard+=unnamed         " Use system clipboard
+set clipboard+=ideaput         " IntelliJ clipboard integration
 
-" Show current mode (INSERT, VISUAL, etc.) in status bar
-set showmode
+" -----------------------------------------------------------------------------
+" Editor Behavior
+" -----------------------------------------------------------------------------
+set visualbell                 " Visual feedback instead of beeping
+set ideajoin                   " Smart line joining with J
+set idearefactormode=keep      " Stay in Vim mode during refactoring
+set ideamarks                  " Sync marks with IntelliJ bookmarks
+set ideavimsupport=dialog      " Use IdeaVim in dialogs
 
-" Visual bell instead of annoying beep
-set visualbell
+" =============================================================================
+" 2. PLUGINS
+" =============================================================================
+" Plugins extend IdeaVim with additional Vim features
+" -----------------------------------------------------------------------------
 
-" Make J (join lines) work smarter with IntelliJ
-set ideajoin
+" Text Manipulation
+Plug 'surround'                " Surround text objects (ys, cs, ds)
+Plug 'commentary'              " Comment with gc motion
+Plug 'ReplaceWithRegister'     " Replace motion with register (gr)
+Plug 'exchange'                " Exchange text regions (cx)
 
-" Keep Vim mode after refactoring
-set idearefactormode=keep
+" Text Objects
+Plug 'argtextobj'              " Function arguments (aa, ia)
+Plug 'textobj-entire'          " Entire buffer (ae, ie)
+Plug 'textobj-indent'          " Indentation levels (ai, ii, aI, iI)
 
-" Sync Vim marks with IntelliJ bookmarks
-set ideamarks
+" Navigation & Motion
+Plug 'sneak'                   " 2-char search jump (s, S)
+Plug 'quickscope'              " Highlight f/F/t/T targets
+Plug 'vim-paragraph-motion'     " Better paragraph jumps
+Plug 'matchit'                 " Extended % matching
 
-" ============================================================================
-" SECTION 2: Leader Key
-" ============================================================================
+" UI Enhancements
+Plug 'NERDTree'                " File explorer sidebar
+Plug 'highlightedyank'         " Visual feedback on yank
+Plug 'multiple-cursors'        " Multi-cursor editing
+Plug 'which-key'               " Keybinding popup help
 
-" Leader key is like a "prefix" for custom shortcuts
-" Space is ergonomic because its easy to reach with thumbs
-let mapleader = " "
+" =============================================================================
+" 3. LEADER KEY
+" =============================================================================
 
-" ============================================================================
-" SECTION 3: Essential Plugins
-" ============================================================================
+let mapleader = " "            " Space as leader - ergonomic and accessible
 
-" These add Vim features that work great with IntelliJ
-set surround
-set commentary
-set highlightedyank
-set argtextobj
-set textobj-entire
-set exchange
-set ReplaceWithRegister
-set matchit
-set vim-paragraph-motion
-
-" ============================================================================
-" SECTION 4: Which-Key Settings
-" ============================================================================
+" =============================================================================
+" 4. WHICH-KEY DESCRIPTIONS
+" =============================================================================
+" Descriptions for which-key popup menu
+" Shows when pressing <leader> and waiting
+" -----------------------------------------------------------------------------
 
 set which-key
 set notimeout
 set timeoutlen=1000
 
-" LEADER KEY
-let g:WhichKeyDesc_leader = "<leader> Leader key"
+" -----------------------------------------------------------------------------
+" Top Level
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_leader = "<leader> Leader"
+let g:WhichKeyDesc_save = "<leader>w Save"
+let g:WhichKeyDesc_comment = "<leader>/ Comment"
+let g:WhichKeyDesc_notifications = "<leader>n Notifications"
+let g:WhichKeyDesc_usages = "<leader>u Show Usages"
+let g:WhichKeyDesc_recent = "<leader>o Recent Locations"
+let g:WhichKeyDesc_explorer = "<leader>e Explorer"
+let g:WhichKeyDesc_explorer_find = "<leader>E Find in Explorer"
 
-" WINDOWS & SPLITS - <leader>w
-let g:WhichKeyDesc_windows = "<leader>w Windows & Splits"
-let g:WhichKeyDesc_windows_split_vertical = "<leader>wv Split vertically"
-let g:WhichKeyDesc_windows_split_horizontal = "<leader>ws Split horizontally"
-let g:WhichKeyDesc_windows_unsplit = "<leader>wu Unsplit (close splits)"
-let g:WhichKeyDesc_windows_maximize = "<leader>wm Maximize (hide all windows)"
+" -----------------------------------------------------------------------------
+" Window Management [w]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_windows = "<leader>w Windows"
+let g:WhichKeyDesc_windows_split_vertical = "<leader>wv Split Vertical"
+let g:WhichKeyDesc_windows_split_horizontal = "<leader>ws Split Horizontal"
+let g:WhichKeyDesc_windows_unsplit = "<leader>wu Unsplit"
+let g:WhichKeyDesc_windows_maximize = "<leader>wm Maximize"
+let g:WhichKeyDesc_windows_save = "<leader>ww Save File"
 
-" BUFFERS/TABS - <leader>b
-let g:WhichKeyDesc_buffers = "<leader>b Buffers/Tabs"
-let g:WhichKeyDesc_buffers_next = "<leader>bn Next tab"
-let g:WhichKeyDesc_buffers_previous = "<leader>bp Previous tab"
-let g:WhichKeyDesc_buffers_delete = "<leader>bd Close current tab"
-let g:WhichKeyDesc_buffers_delete_all = "<leader>ba Close all other tabs"
+" -----------------------------------------------------------------------------
+" Buffer Management [b]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_buffers = "<leader>b Buffers"
+let g:WhichKeyDesc_buffers_next = "<leader>bn Next"
+let g:WhichKeyDesc_buffers_previous = "<leader>bp Previous"
+let g:WhichKeyDesc_buffers_delete = "<leader>bd Delete"
+let g:WhichKeyDesc_buffers_delete_all = "<leader>ba Delete Others"
 
-" FIND/SEARCH - <leader>f
-let g:WhichKeyDesc_find = "<leader>f Find/Search"
-let g:WhichKeyDesc_find_files = "<leader>ff Find files"
-let g:WhichKeyDesc_find_grep = "<leader>fg Find in files (grep)"
-let g:WhichKeyDesc_find_buffers = "<leader>fb Find recent files (buffers)"
-let g:WhichKeyDesc_find_symbols = "<leader>fs Find symbols (file structure)"
-let g:WhichKeyDesc_find_all = "<leader>fa Search everywhere"
+" -----------------------------------------------------------------------------
+" Find & Search [f]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_find = "<leader>f Find"
+let g:WhichKeyDesc_find_files = "<leader>ff Files"
+let g:WhichKeyDesc_find_grep = "<leader>fg Grep"
+let g:WhichKeyDesc_find_buffers = "<leader>fb Buffers"
+let g:WhichKeyDesc_find_symbols = "<leader>fs Symbols"
+let g:WhichKeyDesc_find_all = "<leader>fa All"
 
-" EXPLORER - <leader>e
-let g:WhichKeyDesc_explorer = "<leader>e Show in project explorer"
+" -----------------------------------------------------------------------------
+" Code Actions [c]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_code = "<leader>c Code"
+let g:WhichKeyDesc_code_actions = "<leader>ca Actions"
+let g:WhichKeyDesc_code_rename = "<leader>cr Rename"
+let g:WhichKeyDesc_code_format = "<leader>cf Format"
+let g:WhichKeyDesc_code_imports = "<leader>ci Imports"
+let g:WhichKeyDesc_code_generate = "<leader>cc Generate"
+let g:WhichKeyDesc_code_surround = "<leader>cs Surround With"
+let g:WhichKeyDesc_code_error = "<leader>ce Error Description"
+let g:WhichKeyDesc_code_hierarchy = "<leader>ch Call Hierarchy"
 
-" CODE ACTIONS - <leader>c
-let g:WhichKeyDesc_code = "<leader>c Code Actions"
-let g:WhichKeyDesc_code_actions = "<leader>ca Show code actions (quick fix)"
-let g:WhichKeyDesc_code_rename = "<leader>cr Rename symbol"
-let g:WhichKeyDesc_code_format = "<leader>cf Format code"
-let g:WhichKeyDesc_code_imports = "<leader>ci Optimize imports"
-let g:WhichKeyDesc_code_generate = "<leader>cc Generate code"
+" -----------------------------------------------------------------------------
+" Git Operations [g]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_git = "<leader>g Git"
+let g:WhichKeyDesc_git_status = "<leader>gs Status"
+let g:WhichKeyDesc_git_blame = "<leader>gb Blame"
+let g:WhichKeyDesc_git_history = "<leader>gh History"
+let g:WhichKeyDesc_git_diff = "<leader>gd Diff"
+let g:WhichKeyDesc_git_branches = "<leader>gB Branches"
 
-" COMMENT - <leader>/
-let g:WhichKeyDesc_comment = "<leader>/ Toggle comment"
-
-" REFACTOR - <leader>r
+" -----------------------------------------------------------------------------
+" Refactoring [r]
+" -----------------------------------------------------------------------------
 let g:WhichKeyDesc_refactor = "<leader>r Refactor"
-let g:WhichKeyDesc_refactor_menu = "<leader>rr Refactor menu (show all)"
-let g:WhichKeyDesc_refactor_method = "<leader>rm Extract method"
-let g:WhichKeyDesc_refactor_variable = "<leader>rv Extract variable"
+let g:WhichKeyDesc_refactor_menu = "<leader>rr Menu"
+let g:WhichKeyDesc_refactor_method = "<leader>rm Extract Method"
+let g:WhichKeyDesc_refactor_variable = "<leader>rv Extract Variable"
 
-" RUN/EXECUTE - <leader>x
-let g:WhichKeyDesc_execute = "<leader>x Run/Execute"
-let g:WhichKeyDesc_execute_run = "<leader>xx Run (repeat last)"
-let g:WhichKeyDesc_execute_choose = "<leader>xr Choose run configuration"
+" -----------------------------------------------------------------------------
+" Run & Execute [x]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_execute = "<leader>x Execute"
+let g:WhichKeyDesc_execute_run = "<leader>xx Run"
+let g:WhichKeyDesc_execute_choose = "<leader>xr Choose Config"
 let g:WhichKeyDesc_execute_stop = "<leader>xs Stop"
-let g:WhichKeyDesc_execute_test = "<leader>xt Test/Run class"
-let g:WhichKeyDesc_execute_test_method = "<leader>xm Test method"
-let g:WhichKeyDesc_execute_test_failed = "<leader>xf Rerun failed tests"
+let g:WhichKeyDesc_execute_test = "<leader>xt Test Class"
+let g:WhichKeyDesc_execute_test_method = "<leader>xm Test Method"
+let g:WhichKeyDesc_execute_test_failed = "<leader>xf Test Failed"
 
-" DEBUG - <leader>d
+" -----------------------------------------------------------------------------
+" Debug [d]
+" -----------------------------------------------------------------------------
 let g:WhichKeyDesc_debug = "<leader>d Debug"
-let g:WhichKeyDesc_debug_debug = "<leader>dd Debug (start)"
-let g:WhichKeyDesc_debug_breakpoint = "<leader>db Toggle breakpoint"
-let g:WhichKeyDesc_debug_stop = "<leader>ds Stop debug"
+let g:WhichKeyDesc_debug_debug = "<leader>dd Start Debug"
+let g:WhichKeyDesc_debug_breakpoint = "<leader>db Breakpoint"
+let g:WhichKeyDesc_debug_stop = "<leader>ds Stop Debug"
 
-" TERMINAL & VIEWS - <leader>t, <leader>v
-let g:WhichKeyDesc_terminal = "<leader>t Open terminal"
-let g:WhichKeyDesc_view = "<leader>v View Tool Windows"
-let g:WhichKeyDesc_view_database = "<leader>vd View database"
-let g:WhichKeyDesc_view_git = "<leader>vg View git panel"
+" -----------------------------------------------------------------------------
+" Bookmarks [k]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_bookmarks = "<leader>k Bookmarks"
+let g:WhichKeyDesc_bookmarks_toggle = "<leader>kk Toggle"
+let g:WhichKeyDesc_bookmarks_list = "<leader>kl List"
+let g:WhichKeyDesc_bookmarks_next = "<leader>kn Next"
+let g:WhichKeyDesc_bookmarks_prev = "<leader>kp Previous"
 
-" ZEN MODE - <leader>z
-let g:WhichKeyDesc_zen = "<leader>z Toggle distraction-free mode"
-let g:WhichKeyDesc_zen_full = "<leader>Z Toggle zen mode"
+" -----------------------------------------------------------------------------
+" Terminal [t]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_terminal = "<leader>t Terminal"
+let g:WhichKeyDesc_terminal_open = "<leader>tt Open"
+let g:WhichKeyDesc_terminal_new = "<leader>tn New Here"
 
-" INSERT LINES - <leader>i
-let g:WhichKeyDesc_insert = "<leader>i Insert blank lines"
-let g:WhichKeyDesc_insert_below = "<leader>ij Insert line below"
-let g:WhichKeyDesc_insert_above = "<leader>ik Insert line above"
+" -----------------------------------------------------------------------------
+" View [v]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_view = "<leader>v View"
+let g:WhichKeyDesc_view_database = "<leader>vd Database"
+let g:WhichKeyDesc_view_git = "<leader>vg Git"
 
-" MULTI-CURSOR - <leader>m
+" -----------------------------------------------------------------------------
+" Zen Mode [z]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_zen = "<leader>z Distraction Free"
+let g:WhichKeyDesc_zen_full = "<leader>Z Zen Mode"
+
+" -----------------------------------------------------------------------------
+" Insert Lines [i]
+" -----------------------------------------------------------------------------
+let g:WhichKeyDesc_insert = "<leader>i Insert"
+let g:WhichKeyDesc_insert_below = "<leader>ij Line Below"
+let g:WhichKeyDesc_insert_above = "<leader>ik Line Above"
+
+" -----------------------------------------------------------------------------
+" Multi-cursor [m]
+" -----------------------------------------------------------------------------
 let g:WhichKeyDesc_multicursor = "<leader>m Multi-cursor"
-let g:WhichKeyDesc_multicursor_all = "<leader>ma Select all occurrences"
+let g:WhichKeyDesc_multicursor_all = "<leader>ma Select All"
 
-" ============================================================================
-" NOTES FOR NON-LEADER MAPPINGS
-" ============================================================================
-"
-" These dont show in which-key popup but are documented here:
-"
-" NAVIGATION:
-"   Ctrl+h/j/k/l     - Navigate between splits
-"   Alt+j/k          - Move lines up/down
-"   Ctrl+o/i         - Back/Forward in jump history
-"   
-" CODE NAVIGATION:
-"   gd               - Go to declaration
-"   gD               - Go to type declaration
-"   gi               - Go to implementation
-"   gr               - Find usages (references)
-"   K                - Show documentation
-"   Ctrl+k           - Show signature (parameter info)
-"   ]d / [d          - Next/Previous error
-"   ]m / [m          - Next/Previous method
-"
-" VISUAL MODE:
-"   Ctrl+n           - Select next occurrence (multi-cursor)
-"   Ctrl+p           - Unselect previous occurrence
-"   < / >            - Indent left/right (keeps selection)
-"
-" SCROLLING:
-"   Ctrl+d/u         - Scroll down/up (centered)
-"   n / N            - Next/Previous search result (centered)
-"
-" LINE MOVEMENT:
-"   H                - Go to start of line (^)
-"   L                - Go to end of line ($)
-"
-" FOLDING:
-"   zc               - Close fold
-"   zo               - Open fold
-"   za               - Toggle fold
-"   zM               - Close all folds
-"   zR               - Open all folds
-"
-" ============================================================================
+" =============================================================================
+" 5. KEY MAPPINGS
+" =============================================================================
 
-" ============================================================================
-" SECTION 5: Navigation Mappings
-" ============================================================================
+" -----------------------------------------------------------------------------
+" 5.1 Navigation
+" -----------------------------------------------------------------------------
 
-" Split windows
-nmap <leader>wv :action SplitVertically<CR>
-nmap <leader>ws :action SplitHorizontally<CR>
-nmap <leader>wu :action Unsplit<CR>
-nmap <leader>wm :action HideAllWindows<CR>
+" Window Navigation (Ctrl + hjkl)
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
-" Navigate between split windows easier
-nmap <C-h> <C-w>h
-nmap <C-j> <C-w>j
-nmap <C-k> <C-w>k
-nmap <C-l> <C-w>l
+" Window Resizing (Ctrl + Shift + hjkl)
+nnoremap <C-S-h> :action StretchSplitToLeft<CR>
+nnoremap <C-S-l> :action StretchSplitToRight<CR>
+nnoremap <C-S-j> :action StretchSplitToBottom<CR>
+nnoremap <C-S-k> :action StretchSplitToTop<CR>
 
-" Tab navigation (buffers)
-nmap <leader>bn :action NextTab<CR>
-nmap <leader>bp :action PreviousTab<CR>
-nmap <leader>bd :action CloseContent<CR>
-nmap <leader>ba :action CloseAllEditorsButActive<CR>
+" Window Management
+nnoremap <leader>wv :action SplitVertically<CR>
+nnoremap <leader>ws :action SplitHorizontally<CR>
+nnoremap <leader>wu :action Unsplit<CR>
+nnoremap <leader>wm :action HideAllWindows<CR>
+nnoremap <leader>ww :w<CR>
 
-" Move lines up/down with Alt+j/k (works in normal and visual mode)
-nmap <A-j> :action MoveLineDown<CR>
-nmap <A-k> :action MoveLineUp<CR>
-vmap <A-j> :action MoveLineDown<CR>
-vmap <A-k> :action MoveLineUp<CR>
+" Buffer/Tab Navigation
+nnoremap <leader>bn :action NextTab<CR>
+nnoremap <leader>bp :action PreviousTab<CR>
+nnoremap <leader>bd :action CloseContent<CR>
+nnoremap <leader>ba :action CloseAllEditorsButActive<CR>
 
-" ============================================================================
-" SECTION 6: File Navigation & Search Mappings
-" ============================================================================
+" Jump History
+nnoremap <C-o> :action Back<CR>
+nnoremap <C-i> :action Forward<CR>
+nnoremap g; :action JumpToLastChange<CR>
+nnoremap g, :action JumpToNextChange<CR>
+nnoremap <leader>o :action RecentLocations<CR>
 
-" <leader>f = "Find" related commands
-nmap <leader>ff :action GotoFile<CR>
-nmap <leader>fg :action FindInPath<CR>
-nmap <leader>fb :action RecentFiles<CR>
-nmap <leader>fs :action FileStructurePopup<CR>
-nmap <leader>fa :action SearchEverywhere<CR>
+" Line Movement (Alt + jk)
+nnoremap <A-j> :action MoveLineDown<CR>
+nnoremap <A-k> :action MoveLineUp<CR>
+vnoremap <A-j> :action MoveLineDown<CR>
+vnoremap <A-k> :action MoveLineUp<CR>
 
-" Toggle file Explorer
-nmap <leader>e :action SelectInProjectView<CR>
+" Better Line Navigation
+nnoremap H ^
+nnoremap L $
+vnoremap H ^
+vnoremap L $
 
-" ============================================================================
-" SECTION 7: Code Navigation (LSP-like) Mapping
-" ============================================================================
+" -----------------------------------------------------------------------------
+" 5.2 File Operations
+" -----------------------------------------------------------------------------
 
-" Go to definition/references
-nmap gd :action GotoDeclaration<CR>
-nmap gD :action GotoTypeDeclaration<CR>
-nmap gi :action GotoImplementation<CR>
-nmap gr :action FindUsages<CR>
-nmap K :action QuickJavaDoc<CR>
+" File Search
+nnoremap <leader>ff :action GotoFile<CR>
+nnoremap <leader>fg :action FindInPath<CR>
+nnoremap <leader>fb :action RecentFiles<CR>
+nnoremap <leader>fs :action FileStructurePopup<CR>
+nnoremap <leader>fa :action SearchEverywhere<CR>
 
-" Navigate errors
-nmap ]d :action GotoNextError<CR>
-nmap [d :action GotoPreviousError<CR>
+" File Explorer (NERDTree)
+let g:NERDTreeMapActivateNode='l'
+let g:NERDTreeMapJumpParent='h'
+nnoremap <leader>e :NERDTreeToggle<CR>
+nnoremap <leader>E :NERDTreeFind<CR>
 
-" Method navigation
-nmap ]m :action MethodDown<CR>
-nmap [m :action MethodUp<CR>
+" -----------------------------------------------------------------------------
+" 5.3 Code Navigation
+" -----------------------------------------------------------------------------
 
-" Back and forward (between buffers)
-nmap <C-o> :action Back<CR>
-nmap <C-i> :action Forward<CR>
+" Go To
+nnoremap gd :action GotoDeclaration<CR>
+nnoremap gD :action GotoTypeDeclaration<CR>
+nnoremap gi :action GotoImplementation<CR>
+nnoremap gr :action FindUsages<CR>
+nnoremap <leader>u :action ShowUsages<CR>
 
-" Show signature
-nmap <C-k> :action ParameterInfo<CR>
-imap <C-k> <C-o>:action ParameterInfo<CR>
+" Documentation
+nnoremap K :action QuickJavaDoc<CR>
+nnoremap <C-k> :action ParameterInfo<CR>
+inoremap <C-k> <C-o>:action ParameterInfo<CR>
 
-" ============================================================================
-" SECTION 8: Code Actions & Refactoring
-" ============================================================================
+" Error Navigation
+nnoremap ]d :action GotoNextError<CR>
+nnoremap [d :action GotoPreviousError<CR>
 
-" Quick actions
-nmap <leader>ca :action ShowIntentionActions<CR>
-vmap <leader>ca :action ShowIntentionActions<CR>
-nmap <leader>cr :action RenameElement<CR>
-vmap <leader>cr :action RenameElement<CR>
+" Method Navigation
+nnoremap ]m :action MethodDown<CR>
+nnoremap [m :action MethodUp<CR>
 
-" Formatting
-nmap <leader>cf :action ReformatCode<CR>
-vmap <leader>cf :action ReformatCode<CR>
-nmap <leader>ci :action OptimizeImports<CR>
+" -----------------------------------------------------------------------------
+" 5.4 Code Actions
+" -----------------------------------------------------------------------------
 
-" Generate code
-nmap <leader>cc :action Generate<CR>
-
-" Comment/uncomment
-nmap <leader>/ :action CommentByLineComment<CR>
-vmap <leader>/ :action CommentByLineComment<CR>
+" Quick Actions
+nnoremap <leader>ca :action ShowIntentionActions<CR>
+vnoremap <leader>ca :action ShowIntentionActions<CR>
 
 " Refactoring
-nmap <leader>rr :action Refactorings.QuickListPopupAction<CR>
-vmap <leader>rr :action Refactorings.QuickListPopupAction<CR>
-nmap <leader>rm :action ExtractMethod<CR>
-vmap <leader>rm :action ExtractMethod<CR>
-nmap <leader>rv :action IntroduceVariable<CR>
-vmap <leader>rv :action IntroduceVariable<CR>
+nnoremap <leader>cr :action RenameElement<CR>
+vnoremap <leader>cr :action RenameElement<CR>
+nnoremap <leader>rr :action Refactorings.QuickListPopupAction<CR>
+vnoremap <leader>rr :action Refactorings.QuickListPopupAction<CR>
+nnoremap <leader>rm :action ExtractMethod<CR>
+vnoremap <leader>rm :action ExtractMethod<CR>
+nnoremap <leader>rv :action IntroduceVariable<CR>
+vnoremap <leader>rv :action IntroduceVariable<CR>
 
-" ============================================================================
-" SECTION 9: Running & Debugging
-" ============================================================================
+" Formatting
+nnoremap <leader>cf :action ReformatCode<CR>
+vnoremap <leader>cf :action ReformatCode<CR>
+nnoremap <leader>ci :action OptimizeImports<CR>
+
+" Code Generation
+nnoremap <leader>cc :action Generate<CR>
+nnoremap <leader>cs :action SurroundWith<CR>
+vnoremap <leader>cs :action SurroundWith<CR>
+
+" Code Information
+nnoremap <leader>ce :action ShowErrorDescription<CR>
+nnoremap <leader>ch :action CallHierarchy<CR>
+
+" Comments
+nnoremap <leader>/ :action CommentByLineComment<CR>
+vnoremap <leader>/ :action CommentByLineComment<CR>
+
+" -----------------------------------------------------------------------------
+" 5.5 Git Operations
+" -----------------------------------------------------------------------------
+
+nnoremap <leader>gs :action Vcs.Show.Local.Changes<CR>
+nnoremap <leader>gb :action Annotate<CR>
+nnoremap <leader>gh :action Vcs.ShowTabbedFileHistory<CR>
+nnoremap <leader>gd :action Compare.LastVersion<CR>
+nnoremap <leader>gB :action Git.Branches<CR>
+
+" -----------------------------------------------------------------------------
+" 5.6 Run & Debug
+" -----------------------------------------------------------------------------
 
 " Run
-nmap <leader>xx :action Run<CR>
-nmap <leader>xr :action ChooseRunConfiguration<CR>
-nmap <leader>xs :action Stop<CR>
-
-" Debug
-nmap <leader>dd :action Debug<CR>
-nmap <leader>db :action ToggleLineBreakpoint<CR>
-nmap <leader>ds :action Stop<CR>
+nnoremap <leader>xx :action Run<CR>
+nnoremap <leader>xr :action ChooseRunConfiguration<CR>
+nnoremap <leader>xs :action Stop<CR>
 
 " Test
-nmap <leader>xt :action RunClass<CR>
-nmap <leader>xm :action RunCurrentTestMethod<CR>
-nmap <leader>xf :action RerunFailedTests<CR>
+nnoremap <leader>xt :action RunClass<CR>
+nnoremap <leader>xm :action RunCurrentTestMethod<CR>
+nnoremap <leader>xf :action RerunFailedTests<CR>
 
-" ============================================================================
-" SECTION 10: Tool Windows
-" ============================================================================
+" Debug
+nnoremap <leader>dd :action Debug<CR>
+nnoremap <leader>db :action ToggleLineBreakpoint<CR>
+nnoremap <leader>ds :action Stop<CR>
 
-nmap <leader>t :action ActivateTerminalToolWindow<CR>
-nmap <leader>vd :action ActivateDatabaseToolWindow<CR>
-nmap <leader>vg :action ActivateVersionControlToolWindow<CR>
+" -----------------------------------------------------------------------------
+" 5.7 Bookmarks
+" -----------------------------------------------------------------------------
 
-" ============================================================================
-" UTILITIES
-" ============================================================================
+nnoremap <leader>kk :action ToggleBookmark<CR>
+nnoremap <leader>kl :action ShowBookmarks<CR>
+nnoremap <leader>kn :action GotoNextBookmark<CR>
+nnoremap <leader>kp :action GotoPreviousBookmark<CR>
 
-" Zen Mode
-nmap <leader>z :action ToggleDistractionFreeMode<CR>
-nmap <leader>Z :action ToggleZenMode<CR>
+" -----------------------------------------------------------------------------
+" 5.8 Tool Windows
+" -----------------------------------------------------------------------------
 
-" Insert blank lines
-nmap <leader>ij o<Esc>
-nmap <leader>ik O<Esc>
+nnoremap <leader>tt :action ActivateTerminalToolWindow<CR>
+nnoremap <leader>tn :action Terminal.OpenInTerminal<CR>
+nnoremap <leader>vd :action ActivateDatabaseToolWindow<CR>
+nnoremap <leader>vg :action ActivateVersionControlToolWindow<CR>
 
-" Better indenting
-vmap < <gv
-vmap > >gv
+" =============================================================================
+" 6. VISUAL MODE
+" =============================================================================
 
-" Keep cursor centered when scrolling (much more comfortable!)
-nmap <C-d> <C-d>zz
-nmap <C-u> <C-u>zz
+" Better Indenting (stays in visual mode)
+vnoremap < <gv
+vnoremap > >gv
 
-" Keep cursor centered when searching
-nmap n nzzzv
-nmap N Nzzzv
+" Paste without yanking replaced text
+vnoremap p "_dP
 
-" Folding
-nmap zc :action CollapseRegion<CR>
-nmap zo :action ExpandRegion<CR>
-nmap za :action ExpandCollapseToggleAction<CR>
-nmap zM :action CollapseAllRegions<CR>
-nmap zR :action ExpandAllRegions<CR>
+" Multi-cursor
+vnoremap <C-n> :action SelectNextOccurrence<CR>
+vnoremap <C-p> :action UnselectPreviousOccurrence<CR>
+vnoremap <leader>ma :action SelectAllOccurrences<CR>
 
-" H goes to start of line, L goes to end
-nmap H ^
-nmap L $
-vmap H ^
-vmap L $
+" =============================================================================
+" 7. UTILITIES
+" =============================================================================
 
-" Multiple cursors (IntelliJ Multi-caret)
-vmap <C-n> :action SelectNextOccurrence<CR>
-vmap <C-p> :action UnselectPreviousOccurrence<CR>
-vmap <leader>ma :action SelectAllOccurrences<CR>
+" -----------------------------------------------------------------------------
+" UI Toggles
+" -----------------------------------------------------------------------------
+nnoremap <leader>z :action ToggleDistractionFreeMode<CR>
+nnoremap <leader>Z :action ToggleZenMode<CR>
+nnoremap <leader>n :action CloseAllNotifications<CR>
+
+" -----------------------------------------------------------------------------
+" Quick Edits
+" -----------------------------------------------------------------------------
+nnoremap <leader>w :w<CR>
+nnoremap <leader>ij o<Esc>
+nnoremap <leader>ik O<Esc>
+
+" -----------------------------------------------------------------------------
+" Scrolling (centered)
+" -----------------------------------------------------------------------------
+nnoremap <C-d> <C-d>zz
+nnoremap <C-u> <C-u>zz
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" -----------------------------------------------------------------------------
+" Code Folding
+" -----------------------------------------------------------------------------
+nnoremap zc :action CollapseRegion<CR>
+nnoremap zo :action ExpandRegion<CR>
+nnoremap za :action ExpandCollapseToggleAction<CR>
+nnoremap zM :action CollapseAllRegions<CR>
+nnoremap zR :action ExpandAllRegions<CR>
+
+" =============================================================================
+" END OF CONFIGURATION
+" =============================================================================
+" For more information:
+" - IdeaVim: https://github.com/JetBrains/ideavim
+" - Plugins: https://github.com/JetBrains/ideavim/wiki/IdeaVim-Plugins
+" =============================================================================
