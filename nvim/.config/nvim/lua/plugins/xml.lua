@@ -34,7 +34,7 @@ return {
 
   -- Mason to install tools
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = {
       ensure_installed = {
         "lemminx", -- XML LSP
