@@ -1,4 +1,4 @@
--- lua/plugins/jdtls.lua
+-- lua/plugins/java.lua
 return {
   {
     "mfussenegger/nvim-jdtls",
@@ -9,15 +9,26 @@ return {
           format = {
             enabled = false,
           },
-          configuration = {
-            runtimes = {
-              { name = "JavaSE-21", path = "/opt/homebrew/opt/openjdk@21" },
-              { name = "JavaSE-25", path = "/opt/homebrew/opt/openjdk" },
-            },
-          },
+          --   configuration = {
+          --     runtimes = {
+          --       name = "JavaSE-21",
+          --       path = vim.fn.getenv("JAVA_HOME"),
+          --       default = true,
+          --     },
+          --   },
         },
       })
       return opts
     end,
+  },
+
+  -- Formatter
+  {
+    "stevearc/conform.nvim",
+    opts = {
+      formatters_by_ft = {
+        java = { "google-java-format" },
+      },
+    },
   },
 }
