@@ -1,0 +1,19 @@
+-- -- lua/plugins/noice.lua
+-- return {
+--   "folke/noice.nvim",
+--   opts = {
+--     lsp = {
+--       signature = {
+--         enabled = true,
+--         opts = {
+--           size = {
+--             max_width = 40,
+--             max_height = 5,
+--           },
+--           border = "single",
+--           focusable = false,
+--         },
+--       },
+--     },
+--   },
+-- }
