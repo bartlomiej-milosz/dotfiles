@@ -3,66 +3,83 @@ return {
         "nvim-mini/mini.icons",
         version = false,
         opts = {
-            -- Icon style options:
-            -- 'glyph' - Beautiful Nerd Font icons (requires Nerd Font installed)
-            --           Best visual experience, recommended if you have Nerd Fonts
-            -- 'ascii' - Simple ASCII characters (*, +, -)
-            --           Works everywhere, fallback if you see � or □ instead of icons
             style = "glyph",
-            -- style = "ascii",  -- Uncomment if Nerd Fonts not available
         },
     },
 
     {
-        'nvim-mini/mini.notify',
+        "nvim-mini/mini.notify",
         version = false,
-        -- lazy = false, -- force immediate load
         event = "VeryLazy",
         keys = {
             {
                 "<leader>nh",
-                function() require('mini.notify').show_history() end,
+                function() require("mini.notify").show_history() end,
                 desc = "Notification History"
             },
             {
                 "<leader>nc",
-                function() require('mini.notify').clear() end,
+                function() require("mini.notify").clear() end,
                 desc = "Clear Notifications"
             },
         },
         opts = {
             content = {
                 format = function(notif)
-                    local ts = os.date('%H:%M:%S', notif.ts_update)
-                    return string.format('[%s] %s', ts, notif.msg)
+                    local ts = os.date("%H:%M:%S", notif.ts_update)
+                    return string.format("[%s] %s", ts, notif.msg)
                 end,
             },
             lsp_progress = {
                 enable = true,
                 duration_last = 1000,
             },
-            window = {
-                config = {
-                    -- border = 'rounded',
-                },
-                max_width_share = 0.382,
-                winblend = 25,
+        },
+        config = function(_, opts)
+            require("mini.notify").setup(opts)
+
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = "mininotify-history",
+                callback = function(event)
+                    vim.keymap.set("n", "q", "<cmd>bdelete<cr>", { buffer = event.buf })
+                end,
+            })
+        end,
+    },
+
+    {
+        "nvim-mini/mini.files",
+        opts = {
+            windows = {
+                preview = true,
+                width_preview = 50,
+            },
+        },
+        keys = {
+            {
+                "<leader>e",
+                function()
+                    if not require("mini.files").close() then
+                        require("mini.files").open()
+                    end
+                end,
+                desc = "Explorer Toggle",
+            },
+            {
+                "<leader>E",
+                "<cmd>lua require('mini.files').open(vim.api.nvim_buf_get_name(0))<cr>",
+                desc = "Explorer (Current File)",
             },
         },
     },
 
     {
-        "nvim-mini/mini.files",
-        version = false
-    },
-
-
-    {
         "nvim-mini/mini.pick",
+        version = false,
         opts = {},
         keys = {
             { "<leader>ff", "<cmd>Pick files<cr>",     desc = "Find files" },
-            { "<leader>fb", "<cmd>Pick buffers<cr>",   desc = "Find buffers" }, -- ← BUFFERS!
+            { "<leader>fb", "<cmd>Pick buffers<cr>",   desc = "Find buffers" },
             { "<leader>fg", "<cmd>Pick grep_live<cr>", desc = "Live grep" },
             { "<leader>fh", "<cmd>Pick help<cr>",      desc = "Help tags" },
             { "<leader>fr", "<cmd>Pick resume<cr>",    desc = "Resume" },
@@ -71,21 +88,42 @@ return {
 
     {
         "nvim-mini/mini.clue",
-        opts = function()
+        version = false,
+        config = function()
             local miniclue = require("mini.clue")
-            return {
+            miniclue.setup({
                 triggers = {
-                    { mode = "n", keys = "<leader>" },
-                    { mode = "x", keys = "<leader>" },
+                    -- Leader triggers
+                    { mode = "n", keys = "<Leader>" },
+                    { mode = "x", keys = "<Leader>" },
+                    -- Built-in completion
+                    { mode = "i", keys = "<C-x>" },
+                    -- `g` key
                     { mode = "n", keys = "g" },
-                    { mode = "n", keys = "[" },
-                    { mode = "n", keys = "]" },
+                    { mode = "x", keys = "g" },
+                    -- Marks
                     { mode = "n", keys = "'" },
                     { mode = "n", keys = "`" },
+                    { mode = "x", keys = "'" },
+                    { mode = "x", keys = "`" },
+                    -- Registers
                     { mode = "n", keys = '"' },
+                    { mode = "x", keys = '"' },
+                    { mode = "i", keys = "<C-r>" },
+                    { mode = "c", keys = "<C-r>" },
+                    -- Window commands
+                    { mode = "n", keys = "<C-w>" },
+                    -- `z` key
+                    { mode = "n", keys = "z" },
+                    { mode = "x", keys = "z" },
+                    -- Text objects
+                    { mode = "o", keys = "a" },
+                    { mode = "o", keys = "i" },
+                    { mode = "x", keys = "a" },
+                    { mode = "x", keys = "i" },
                 },
+
                 clues = {
-                    -- Built-in clues
                     miniclue.gen_clues.builtin_completion(),
                     miniclue.gen_clues.g(),
                     miniclue.gen_clues.marks(),
@@ -94,79 +132,62 @@ return {
                     miniclue.gen_clues.z(),
 
                     -- Leader group descriptions
-                    { mode = "n", keys = "<leader>c", desc = "+Code" },
-                    { mode = "n", keys = "<leader>d", desc = "+Debug/Diagnostics" },
-                    { mode = "n", keys = "<leader>f", desc = "+Find" },
-                    { mode = "n", keys = "<leader>n", desc = "+Notifications" },
-                    { mode = "n", keys = "<leader>r", desc = "+Rename" },
-                    { mode = "n", keys = "<leader>t", desc = "+Test" },
-                    { mode = "n", keys = "<leader>w", desc = "+Workspace" },
+                    { mode = "n", keys = "<leader>c",  desc = "+Code" },
+                    { mode = "n", keys = "<leader>e",  desc = "+Explorer" },
+                    { mode = "n", keys = "<leader>f",  desc = "+Find" },
+                    { mode = "n", keys = "<leader>n",  desc = "+Notifications" },
 
-                    -- LSP Code Actions & Refactoring (from nvim-lspconfig.lua)
-                    { mode = "n", keys = "<leader>ca", desc = "Code Action" },
-                    { mode = "n", keys = "<leader>cf", desc = "Format File" },
-                    { mode = "n", keys = "<leader>ch", desc = "Toggle Inlay Hints" },
-                    { mode = "n", keys = "<leader>rn", desc = "Rename Symbol" },
+                    -- Mini.files keymaps
+                    { mode = "n", keys = "<leader>e",  desc = "Toggle Explorer" },
+                    { mode = "n", keys = "<leader>E",  desc = "Explorer (Current File)" },
 
-                    -- LSP Diagnostics (from nvim-lspconfig.lua)
-                    { mode = "n", keys = "<leader>dd", desc = "Show Diagnostic" },
-                    { mode = "n", keys = "<leader>dq", desc = "Diagnostics to Quickfix" },
-                    { mode = "n", keys = "<leader>dl", desc = "Diagnostics to Loclist" },
-                    { mode = "n", keys = "[d", desc = "Previous Diagnostic" },
-                    { mode = "n", keys = "]d", desc = "Next Diagnostic" },
-
-                    -- LSP Navigation (from nvim-lspconfig.lua)
-                    { mode = "n", keys = "gd", desc = "Go to Definition" },
-                    { mode = "n", keys = "gD", desc = "Go to Declaration" },
-                    { mode = "n", keys = "gi", desc = "Go to Implementation" },
-                    { mode = "n", keys = "gr", desc = "Go to References" },
-                    { mode = "n", keys = "gy", desc = "Go to Type Definition" },
-                    { mode = "n", keys = "K",  desc = "Hover Documentation" },
-                    { mode = "n", keys = "gK", desc = "Signature Help" },
-
-                    -- LSP Workspace (from nvim-lspconfig.lua)
-                    { mode = "n", keys = "<leader>wa", desc = "Add Workspace Folder" },
-                    { mode = "n", keys = "<leader>wr", desc = "Remove Workspace Folder" },
-                    { mode = "n", keys = "<leader>wl", desc = "List Workspace Folders" },
-
-                    -- Mini.pick keymaps (from nvim-mini.lua)
+                    -- Mini.pick keymaps
                     { mode = "n", keys = "<leader>ff", desc = "Find Files" },
                     { mode = "n", keys = "<leader>fb", desc = "Find Buffers" },
                     { mode = "n", keys = "<leader>fg", desc = "Live Grep" },
                     { mode = "n", keys = "<leader>fh", desc = "Help Tags" },
                     { mode = "n", keys = "<leader>fr", desc = "Resume Search" },
 
-                    -- Mini.notify keymaps (from nvim-mini.lua)
+                    -- Mini.notify keymaps
                     { mode = "n", keys = "<leader>nh", desc = "Notification History" },
                     { mode = "n", keys = "<leader>nc", desc = "Clear Notifications" },
 
-                    -- Mason keymap (from mason.lua)
-                    { mode = "n", keys = "<leader>cm", desc = "Open Mason" },
+                    -- Mini.ai keymaps
+                    { mode = "o", keys = "af",         desc = "around function" },
+                    { mode = "o", keys = "if",         desc = "inner function" },
+                    { mode = "o", keys = "ac",         desc = "around class" },
+                    { mode = "o", keys = "ic",         desc = "inner class" },
+                    { mode = "o", keys = "ao",         desc = "around code block" },
+                    { mode = "o", keys = "io",         desc = "inner code block" },
+                    { mode = "o", keys = "ad",         desc = "around digits" },
+                    { mode = "o", keys = "id",         desc = "inner digits" },
+                    { mode = "o", keys = "au",         desc = "around function call" },
+                    { mode = "o", keys = "iu",         desc = "inner function call" },
+                    { mode = "o", keys = "aU",         desc = "around function call (no dots)" },
+                    { mode = "o", keys = "iU",         desc = "inner function call (no dots)" },
 
-                    -- Java-specific keymaps (from ftplugin/java.lua)
-                    { mode = "n", keys = "<leader>co", desc = "Organize Imports (Java)" },
-                    { mode = "n", keys = "<leader>cv", desc = "Extract Variable (Java)" },
-                    { mode = "n", keys = "<leader>cc", desc = "Extract Constant (Java)" },
-                    { mode = "n", keys = "<leader>cm", desc = "Extract Method (Java)" },
-                    { mode = "n", keys = "<leader>tc", desc = "Test Class (Java)" },
-                    { mode = "n", keys = "<leader>tm", desc = "Test Method (Java)" },
-
-                    -- DAP (Debug Adapter Protocol) keymaps (from nvim-dap.lua)
-                    { mode = "n", keys = "<leader>db", desc = "Toggle Breakpoint" },
-                    { mode = "n", keys = "<leader>dc", desc = "Continue" },
-                    { mode = "n", keys = "<leader>di", desc = "Step Into" },
-                    { mode = "n", keys = "<leader>do", desc = "Step Over" },
-                    { mode = "n", keys = "<leader>dO", desc = "Step Out" },
-                    { mode = "n", keys = "<leader>dr", desc = "Toggle REPL" },
-                    { mode = "n", keys = "<leader>dl", desc = "Run Last" },
-                    { mode = "n", keys = "<leader>dt", desc = "Terminate" },
-                    { mode = "n", keys = "<leader>du", desc = "Toggle DAP UI" },
+                    -- Mini.ai keymaps
+                    { mode = "x", keys = "af",         desc = "around function" },
+                    { mode = "x", keys = "if",         desc = "inner function" },
+                    { mode = "x", keys = "ac",         desc = "around class" },
+                    { mode = "x", keys = "ic",         desc = "inner class" },
+                    { mode = "x", keys = "ao",         desc = "around code block" },
+                    { mode = "x", keys = "io",         desc = "inner code block" },
+                    { mode = "x", keys = "ad",         desc = "around digits" },
+                    { mode = "x", keys = "id",         desc = "inner digits" },
+                    { mode = "x", keys = "au",         desc = "around function call" },
+                    { mode = "x", keys = "iu",         desc = "inner function call" },
+                    { mode = "x", keys = "aU",         desc = "around function call (no dots)" },
+                    { mode = "x", keys = "iU",         desc = "inner function call (no dots)" },
                 },
+
                 window = {
-                    -- By default 1000ms
-                    delay = 500,
+                    config = {},
+                    delay = 1000,
+                    scroll_down = "<C-d>",
+                    scroll_up = "<C-u>",
                 },
-            }
+            })
         end,
     }
 }
