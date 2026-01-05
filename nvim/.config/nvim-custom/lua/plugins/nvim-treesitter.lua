@@ -29,12 +29,22 @@ return {
         end,
     },
 
+    -- nvim-treesitter-textobjects is required for mini.ai treesitter integration
+    {
+        "nvim-treesitter/nvim-treesitter-textobjects",
+        event = "VeryLazy",
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+    },
+
     -- Optionaly move it into plugins/nvim-mini.lua
     -- Or keep it here since it is treesitter specififc config
     {
         'nvim-mini/mini.ai',
         event = "VeryLazy",
-        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        dependencies = {
+            'nvim-treesitter/nvim-treesitter',
+            'nvim-treesitter/nvim-treesitter-textobjects'
+        },
         opts = function()
             local ai = require("mini.ai")
             return {
