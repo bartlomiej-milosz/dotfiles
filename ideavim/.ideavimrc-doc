@@ -1,6 +1,7 @@
 " ============================================================================
 " IDEAVIM CONFIG
 " Save this as ~/.ideavimrc on Linux/Mac or ~/_ideavimrc on Windows
+" INLINE COMMENTS NOT ALLOWED - THIS IS MANUAL FILE
 " ============================================================================
 
 " ============================================================================
@@ -15,14 +16,14 @@ set relativenumber
 set scrolloff=999
 
 " Search settings
-set ignorecase
-set smartcase
-set incsearch
-set hlsearch
+set ignorecase     " Ignore case when searching
+set smartcase      " But be case-sensitive if search contains uppercase
+set incsearch      " Show search results as you type
+set hlsearch       " Highlight all search matches
 
 " Use system clipboard (allows copy/paste between Vim and other apps)
 set clipboard+=unnamed
-set clipboard+=ideaput
+set clipboard+=ideaput     " Better clipboard integration with IntelliJ
 
 " Show current mode (INSERT, VISUAL, etc.) in status bar
 set showmode
@@ -52,23 +53,23 @@ let mapleader = " "
 " ============================================================================
 
 " These add Vim features that work great with IntelliJ
-set surround
-set commentary
-set highlightedyank
-set argtextobj
-set textobj-entire
-set exchange
-set ReplaceWithRegister
-set matchit
-set vim-paragraph-motion
+set surround              " Change surrounding quotes/brackets with cs, ds, ys
+set commentary            " Comment lines with gc
+set highlightedyank       " Briefly highlight what you just yanked (copied)
+set argtextobj            " Text objects for function arguments (cia, daa)
+set textobj-entire        " Text objects for entire file (ae, ie)
+set exchange              " Exchange text objects `cx{motion}`
+set ReplaceWithRegister   " Replace text with register using `gr{motion}`
+set matchit               " Enhanced % matching for if/else, tags, etc.
+set vim-paragraph-motion  " Better { and } paragraph motion
 
 " ============================================================================
 " SECTION 4: Which-Key Settings
 " ============================================================================
 
-set which-key
-set notimeout
-set timeoutlen=1000
+set which-key               " Shows available keybindings (adds delay though)
+set notimeout               " Disable timeout for partial commands
+set timeoutlen=2000         " Which-key popup delay (2s)
 
 " LEADER KEY
 let g:WhichKeyDesc_leader = "<leader> Leader key"
@@ -225,14 +226,14 @@ vmap <A-k> :action MoveLineUp<CR>
 " ============================================================================
 
 " <leader>f = "Find" related commands
-nmap <leader>ff :action GotoFile<CR>
-nmap <leader>fg :action FindInPath<CR>
-nmap <leader>fb :action RecentFiles<CR>
-nmap <leader>fs :action FileStructurePopup<CR>
-nmap <leader>fa :action SearchEverywhere<CR>
+nmap <leader>ff :action GotoFile<CR>              " files
+nmap <leader>fg :action FindInPath<CR>            " grep
+nmap <leader>fb :action RecentFiles<CR>           " buffers (recent)
+nmap <leader>fs :action FileStructurePopup<CR>    " symbols
+nmap <leader>fa :action SearchEverywhere<CR>      " all (everything)
 
 " Toggle file Explorer
-nmap <leader>e :action SelectInProjectView<CR>
+nmap <leader>e :action SelectInProjectView<CR>    " explorer
 
 " ============================================================================
 " SECTION 7: Code Navigation (LSP-like) Mapping
@@ -243,7 +244,7 @@ nmap gd :action GotoDeclaration<CR>
 nmap gD :action GotoTypeDeclaration<CR>
 nmap gi :action GotoImplementation<CR>
 nmap gr :action FindUsages<CR>
-nmap K :action QuickJavaDoc<CR>
+nmap K :action QuickJavaDoc<CR>     " hover documentation
 
 " Navigate errors
 nmap ]d :action GotoNextError<CR>
@@ -266,14 +267,14 @@ imap <C-k> <C-o>:action ParameterInfo<CR>
 " ============================================================================
 
 " Quick actions
-nmap <leader>ca :action ShowIntentionActions<CR>
-vmap <leader>ca :action ShowIntentionActions<CR>
-nmap <leader>cr :action RenameElement<CR>
-vmap <leader>cr :action RenameElement<CR>
+nmap <leader>ca :action ShowIntentionActions<CR>    " code actions
+vmap <leader>ca :action ShowIntentionActions<CR>    " code actions
+nmap <leader>cr :action RenameElement<CR>           " rename
+vmap <leader>cr :action RenameElement<CR>           " rename
 
 " Formatting
-nmap <leader>cf :action ReformatCode<CR>
-vmap <leader>cf :action ReformatCode<CR>
+nmap <leader>cf :action ReformatCode<CR>            " format
+vmap <leader>cf :action ReformatCode<CR>            " format
 nmap <leader>ci :action OptimizeImports<CR>
 
 " Generate code
@@ -284,11 +285,11 @@ nmap <leader>/ :action CommentByLineComment<CR>
 vmap <leader>/ :action CommentByLineComment<CR>
 
 " Refactoring
-nmap <leader>rr :action Refactorings.QuickListPopupAction<CR>
+nmap <leader>rr :action Refactorings.QuickListPopupAction<CR>     " Refactor menu (all)
 vmap <leader>rr :action Refactorings.QuickListPopupAction<CR>
-nmap <leader>rm :action ExtractMethod<CR>
+nmap <leader>rm :action ExtractMethod<CR>                         " Extract method
 vmap <leader>rm :action ExtractMethod<CR>
-nmap <leader>rv :action IntroduceVariable<CR>
+nmap <leader>rv :action IntroduceVariable<CR>                     " Extract variable
 vmap <leader>rv :action IntroduceVariable<CR>
 
 " ============================================================================
@@ -296,27 +297,27 @@ vmap <leader>rv :action IntroduceVariable<CR>
 " ============================================================================
 
 " Run
-nmap <leader>xx :action Run<CR>
-nmap <leader>xr :action ChooseRunConfiguration<CR>
-nmap <leader>xs :action Stop<CR>
+nmap <leader>xx :action Run<CR>                                   " Run
+nmap <leader>xr :action ChooseRunConfiguration<CR>                " Run (choose)
+nmap <leader>xs :action Stop<CR>                                  " Stop
 
 " Debug
-nmap <leader>dd :action Debug<CR>
-nmap <leader>db :action ToggleLineBreakpoint<CR>
-nmap <leader>ds :action Stop<CR>
+nmap <leader>dd :action Debug<CR>                                 " Debug
+nmap <leader>db :action ToggleLineBreakpoint<CR>                  " Breakpoint
+nmap <leader>ds :action Stop<CR>                                  " Stop
 
 " Test
-nmap <leader>xt :action RunClass<CR>
-nmap <leader>xm :action RunCurrentTestMethod<CR>
-nmap <leader>xf :action RerunFailedTests<CR>
+nmap <leader>xt :action RunClass<CR>                              " Test class
+nmap <leader>xm :action RunCurrentTestMethod<CR>                  " Test method
+nmap <leader>xf :action RerunFailedTests<CR>                      " Test failed
 
 " ============================================================================
 " SECTION 10: Tool Windows
 " ============================================================================
 
-nmap <leader>t :action ActivateTerminalToolWindow<CR>
-nmap <leader>vd :action ActivateDatabaseToolWindow<CR>
-nmap <leader>vg :action ActivateVersionControlToolWindow<CR>
+nmap <leader>t :action ActivateTerminalToolWindow<CR>             " Terminal
+nmap <leader>vd :action ActivateDatabaseToolWindow<CR>            " View database
+nmap <leader>vg :action ActivateVersionControlToolWindow<CR>      " View git
 
 " ============================================================================
 " UTILITIES
