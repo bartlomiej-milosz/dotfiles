@@ -6,8 +6,9 @@ zsh/.zsh/antidote
 # macOS
 .DS_Store
 
-# vsCode
+# editors
 .vscode
+.idea
 
 # notes
 TODO.md
