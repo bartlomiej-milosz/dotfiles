@@ -34,7 +34,7 @@
 " -----------------------------------------------------------------------------
 " Display Settings
 " -----------------------------------------------------------------------------
-set number                      " Show line numbers
+set number                     " Show line numbers
 set relativenumber             " Relative line numbers for easier jumps
 set scrolloff=999              " Keep cursor centered vertically
 set showmode                   " Display current mode in status bar
@@ -67,30 +67,31 @@ set ideavimsupport=dialog      " Use IdeaVim in dialogs
 " 2. PLUGINS
 " =============================================================================
 " Plugins extend IdeaVim with additional Vim features
+" Note: IdeaVim uses 'set' command for plugins, not 'Plug'
 " -----------------------------------------------------------------------------
 
 " Text Manipulation
-Plug 'surround'                " Surround text objects (ys, cs, ds)
-Plug 'commentary'              " Comment with gc motion
-Plug 'ReplaceWithRegister'     " Replace motion with register (gr)
-Plug 'exchange'                " Exchange text regions (cx)
+set surround                   " Surround text objects (ys, cs, ds)
+set commentary                 " Comment with gc motion
+set ReplaceWithRegister        " Replace motion with register (gr)
+set exchange                   " Exchange text regions (cx)
 
 " Text Objects
-Plug 'argtextobj'              " Function arguments (aa, ia)
-Plug 'textobj-entire'          " Entire buffer (ae, ie)
-Plug 'textobj-indent'          " Indentation levels (ai, ii, aI, iI)
+set argtextobj                 " Function arguments (aa, ia)
+set textobj-entire             " Entire buffer (ae, ie)
+set textobj-indent             " Indentation levels (ai, ii, aI, iI)
 
 " Navigation & Motion
-Plug 'sneak'                   " 2-char search jump (s, S)
-Plug 'quickscope'              " Highlight f/F/t/T targets
-Plug 'vim-paragraph-motion'     " Better paragraph jumps
-Plug 'matchit'                 " Extended % matching
+set sneak                      " 2-char search jump (s, S)
+set quickscope                 " Highlight f/F/t/T targets
+set vim-paragraph-motion       " Better paragraph jumps
+set matchit                    " Extended % matching
 
 " UI Enhancements
-Plug 'NERDTree'                " File explorer sidebar
-Plug 'highlightedyank'         " Visual feedback on yank
-Plug 'multiple-cursors'        " Multi-cursor editing
-Plug 'which-key'               " Keybinding popup help
+set NERDTree                   " File explorer sidebar
+set highlightedyank            " Visual feedback on yank
+set multiple-cursors           " Multi-cursor editing
+set which-key                  " Keybinding popup help
 
 " =============================================================================
 " 3. LEADER KEY
