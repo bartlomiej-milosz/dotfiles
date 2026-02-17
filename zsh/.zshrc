@@ -37,3 +37,6 @@ autoload -Uz compinit && compinit
 # SDKMAN
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+# Added by Antigravity
+export PATH="/Users/bartek/.antigravity/antigravity/bin:$PATH"
