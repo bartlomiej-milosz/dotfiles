@@ -6,7 +6,16 @@ antidote load ~/.zsh/plugins.txt
 
 # FZF shell integration
 if [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
+  # Linux
   source /usr/share/fzf/shell/key-bindings.zsh
+elif [[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]]; then
+  # macOS (Apple Silicon)
+  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+  source /opt/homebrew/opt/fzf/shell/completion.zsh
+elif [[ -f /usr/local/opt/fzf/shell/key-bindings.zsh ]]; then
+  # macOS (Intel)
+  source /usr/local/opt/fzf/shell/key-bindings.zsh
+  source /usr/local/opt/fzf/shell/completion.zsh
 fi
 
 # Colors for ls
