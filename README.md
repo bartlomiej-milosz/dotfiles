@@ -57,4 +57,11 @@ dotfiles/
     ```
 - **Ignore files**: The `.stow-local-ignore` file ensures that repo-only files (like `README.md`, `.git`) are not symlinked to your home directory.
 
+## Updates
+
+- **Update Antidote & Plugins**:
+    ```bash
+    ./scripts/update-antidote.sh
+    ```
+
 ---
