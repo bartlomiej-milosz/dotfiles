@@ -2,7 +2,7 @@ font-family = JetBrainsMono Nerd Font
 font-feature = -calt, -liga, -dlig # disable ligatures
 
 # theme = dark:tokyobones_dark.toml,light:tokyobones_light.toml
-theme = dark:kanso-mist,light:kanso-pearl
+theme = dark:kanso-ink,light:kanso-pearl
 
 window-padding-x = 10
 window-padding-y = 10
