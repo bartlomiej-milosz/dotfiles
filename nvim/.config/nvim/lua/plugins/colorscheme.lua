@@ -1,3 +1,4 @@
+-- lua/plugins/colorscheme.lua
 return {
   -- Auto dark mode based on system
   {
@@ -22,5 +23,15 @@ return {
     "webhooked/kanso.nvim",
     lazy = false,
     priority = 999, -- Load after auto-dark-mode
+  },
+
+  -- Configure LazyVim to NOT set its own colorscheme
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      colorscheme = function()
+        -- Let auto-dark-mode handle it
+      end,
+    },
   },
 }
