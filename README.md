@@ -1,76 +1,60 @@
 # Dotfiles
 
-Personal development environment configuration.
+A collection of my personal configuration files for macOS/Linux, managed with [GNU Stow](https://www.gnu.org/software/stow/). 
+Designed for a highly productive, terminal-centric workflow featuring **Neovim**, **Zsh**, and **Ghostty**.
 
-> **Note:** Optimized for macOS. May require adjustments for other operating systems.
+## Tech Stack
 
-## What's Included
-
-- **nvim** - Neovim configuration with LazyVim
-- **zsh** - Shell configuration with Antidote plugin manager
-- **ghostty** - Terminal emulator themes and config
-- **ideavim** - IntelliJ IDEA Vim plugin settings
+- **Shell**: [Zsh](https://www.zsh.org/) + [Antidote](https://getantidote.github.io/) (Plugin Manager)
+- **Editor**: [Neovim](https://neovim.io/) (LazyVim based) + [IdeaVim](https://github.com/JetBrains/ideavim) (for JetBrains IDEs)
+- **Terminal**: [Ghostty](https://ghostty.org/)
+- **Management**: [GNU Stow](https://www.gnu.org/software/stow/)
 
 ## Installation
 
-### Quick Setup
+### Prerequisites
 
-```bash
-./install.sh
-```
+| Tool     | Installation (macOS) |
+| -------- | -------------------- |
+| **Stow** | `brew install stow`  |
+| **Git**  | `brew install git`   |
 
-### What It Does
+### Setup
 
-The install script will:
-1. Check for required dependencies (fzf)
-2. Clone Antidote plugin manager for zsh
-3. Create symlinks from dotfiles to your home directory
-4. Configure all tools automatically
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/YOUR_USERNAME/dotfiles.git ~/dotfiles
+    cd ~/dotfiles
+    ```
 
-### Requirements
+2.  **Install/Stow configurations:**
+    Run the installation script to symlink all configurations to your home directory.
+    ```bash
+    ./stow-install.sh
+    ```
 
-- **fzf** - Fuzzy finder (install via `brew install fzf` on macOS)
-- **git** - For cloning plugin managers
+    *This script uses `stow` to create symlinks from this repo to your `$HOME` directory (`~/.zshrc`, `~/.config/nvim`, etc.).*
 
 ## Structure
 
+The repository is organized into **stow packages**. Each top-level directory corresponds to a configuration package.
+
 ```
 dotfiles/
-├── ghostty/          # Terminal emulator
-│   └── .config/ghostty/
-├── ideavim/          # IntelliJ Vim
-│   └── .ideavimrc
-├── nvim/             # Neovim editor
-│   └── .config/nvim/
-├── zsh/              # Shell
-│   ├── .zshrc
-│   └── .zsh/
-└── install.sh        # Setup script
+├── zsh/           -> Symlinks to ~/.zshrc, ~/.zsh/
+├── nvim/          -> Symlinks to ~/.config/nvim/
+├── ghostty/       -> Symlinks to ~/.config/ghostty/
+└── ideavim/       -> Symlinks to ~/.ideavimrc
+└── scripts/       -> Admin scripts (purge, install)
 ```
 
-## Manual Configuration
+## Maintenance
 
-To link specific configs manually:
+- **Add new config**: Create a new folder (e.g., `tmux`), add files inside (replicating the home dir structure, e.g., `tmux/.tmux.conf`), and run `./stow-install.sh`.
+- **Remove/Clean**: To remove all symlinks and clear cache/state:
+    ```bash
+    ./scripts/uninstall.sh
+    ```
+- **Ignore files**: The `.stow-local-ignore` file ensures that repo-only files (like `README.md`, `.git`) are not symlinked to your home directory.
 
-```bash
-# Neovim
-ln -sf "$PWD/nvim/.config/nvim" "$HOME/.config/nvim"
-
-# Zsh
-ln -sf "$PWD/zsh/.zsh" "$HOME/.zsh"
-ln -sf "$PWD/zsh/.zshrc" "$HOME/.zshrc"
-
-# Ghostty
-ln -sf "$PWD/ghostty/.config/ghostty" "$HOME/.config/ghostty"
-
-# IdeaVim
-ln -sf "$PWD/ideavim/.ideavimrc" "$HOME/.ideavimrc"
-```
-
-## Customization
-
-Edit the `CUSTOM_PATH` variable in `install.sh` to specify a different dotfiles location:
-
-```bash
-CUSTOM_PATH="/path/to/your/dotfiles"
-```
+---

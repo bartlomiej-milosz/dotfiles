@@ -14,10 +14,15 @@ zsh/.zsh/antidote
 TODO.md
 _nvim-dist
 
-# Vim swap files
+# vim swap files
 *.swp
 *.swo
 
-# Backup files
+# backup files
 *.backup
 *~
+
+# other
+
+.idea/
+.vscode/
