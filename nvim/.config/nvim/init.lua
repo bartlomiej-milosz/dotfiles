@@ -1,7 +1,4 @@
--- Load core config before plugins (leader must be set first)
+-- Bootstrap lazy.nvim and load config
 require("config.options")
 require("config.keymaps")
-require("config.autocmds")
-
--- Bootstrap and load plugins
 require("config.lazy")
