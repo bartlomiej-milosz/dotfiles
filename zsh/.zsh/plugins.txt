@@ -1,10 +1,16 @@
 # ~/zsh/.zsh/plugins.txt
 
-# Pure prompt
+# Prompt (Minimal and fast)
 sindresorhus/pure
 
-# Essential plugins
-zsh-users/zsh-syntax-highlighting
-zsh-users/zsh-autosuggestions
+# Base completions
 zsh-users/zsh-completions
+
+# Search functions
 zsh-users/zsh-history-substring-search
+
+# Autosuggestions (Shadow text hints)
+zsh-users/zsh-autosuggestions
+
+# Syntax highlighting (MUST BE AT THE END)
+zsh-users/zsh-syntax-highlighting

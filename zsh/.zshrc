@@ -1,51 +1,65 @@
 # ~/.zshrc
 
-# Load Antidote
-source ~/.zsh/antidote/antidote.zsh
-antidote load ~/.zsh/plugins.txt
+# 1. Autocomplete (Always at the beginning)
+autoload -Uz compinit && compinit
 
-# FZF shell integration
-if [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
-  # Linux
-  source /usr/share/fzf/shell/key-bindings.zsh
-elif [[ -f /opt/homebrew/opt/fzf/shell/key-bindings.zsh ]]; then
-  # macOS (Apple Silicon)
-  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
-  source /opt/homebrew/opt/fzf/shell/completion.zsh
-elif [[ -f /usr/local/opt/fzf/shell/key-bindings.zsh ]]; then
-  # macOS (Intel)
-  source /usr/local/opt/fzf/shell/key-bindings.zsh
-  source /usr/local/opt/fzf/shell/completion.zsh
-fi
+# 2. PATH - Intelligent management
+# Adds directories only if they physically exist on the disk
+typeset -U path # Prevents duplicates in PATH
+path=(
+  $HOME/.local/bin
+  /opt/nvim-linux-x86_64/bin(N) # (N) Null Glob: ignores path if it doesn't exist
+  $path
+)
+export PATH
 
-# Colors for ls
+# 3. Colors and Aliases (OS Specific)
 if [[ "$OSTYPE" == "darwin"* ]]; then
-  # macOS
-  export CLICOLOR=1
-  export LSCOLORS=Gxfxcxdxbxegedabagacad
+    # macOS
+    export CLICOLOR=1
+    export LSCOLORS=Gxfxcxdxbxegedabagacad
+    alias ls='ls -G'
 else
-  # Linux
-  export LS_COLORS='di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
-  alias ls='ls --color=auto'
+    # Linux
+    export LS_COLORS='di=1;36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43'
+    alias ls='ls --color=auto'
 fi
+alias ll='ls -lh'
+alias la='ls -A'
 
-# Basic history settings
+# 4. FZF Shell Integration
+for fzf_path (
+    "/usr/share/fzf/shell"
+    "/opt/homebrew/opt/fzf/shell"
+    "/usr/local/opt/fzf/shell"
+); do
+    if [[ -d "$fzf_path" ]]; then
+        source "$fzf_path/key-bindings.zsh"
+        [[ -f "$fzf_path/completion.zsh" ]] && source "$fzf_path/completion.zsh"
+        break
+    fi
+done
+
+# 5. History settings
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
 setopt SHARE_HISTORY
 
-# Keybindings
-bindkey '^e' fzf-history-widget    # [E]xplore history
-bindkey '^f' fzf-file-widget       # [F]ind file
-bindkey '^g' fzf-cd-widget         # [G]o to directory
+# 6. Keybindings
+bindkey '^e' fzf-history-widget  # [E]xplore history
+bindkey '^f' fzf-file-widget     # [F]ind file
+bindkey '^g' fzf-cd-widget       # [G]o to directory
 
-# Completions
-autoload -Uz compinit && compinit
+# History substring search (Arrow key bindings)
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
-# SDKMAN
+# 7. Antidote (Plugins)
+source ~/.zsh/antidote/antidote.zsh
+antidote load ~/.zsh/plugins.txt
+
+# 8. SDKMAN (Should be at the end as it modifies PATH)
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-# Added by Antigravity
-export PATH="/Users/bartek/.antigravity/antigravity/bin:$PATH"
