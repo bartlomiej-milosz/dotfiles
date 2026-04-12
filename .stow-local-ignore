@@ -1,7 +1,3 @@
 \.DS_Store
-\.git
-\.gitignore
-README.md
-install.sh
-stow-install.sh
-scripts
+.*\.swp
+
