@@ -36,14 +36,6 @@
     # Push only the current branch to the same name on the remote
     default = simple
 
-[pull]
-    # Suppress warnings and use the standard merge strategy when pulling
-    rebase = false
-
-[fetch]
-    # Automatically delete local references to remote branches that no longer exist
-    prune = true
-
 [help]
     # Autocorrect mistyped commands (e.g., 'git statsu') after 1 second (10 deciseconds)
     autocorrect = 10
