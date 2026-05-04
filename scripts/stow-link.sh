@@ -23,6 +23,7 @@ PACKAGES=(
     "ghostty"
     "ideavim"
     "nvim"
+    "tmux"
     "zsh"
 )
 

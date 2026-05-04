@@ -30,6 +30,7 @@ if command_exists stow; then
         "ghostty"
         "ideavim"
         "nvim"
+        "tmux"
         "zsh"
     )
     for package in "${PACKAGES[@]}"; do
@@ -47,6 +48,9 @@ echo "Cleaning up configuration leftovers..."
 # Git
 rm -f "$HOME/.gitconfig"
 rm -f "$HOME/.gitignore_global"
+
+# Tmux
+rm -f "$HOME/.tmux.conf"
 
 # Zsh
 rm -rf "$HOME/.zsh"
