@@ -62,4 +62,3 @@ antidote load ~/.zsh/plugins.txt
 # 8. SDKMAN (Should be at the end as it modifies PATH)
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
