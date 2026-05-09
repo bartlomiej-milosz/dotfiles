@@ -1,0 +1,19 @@
+shell = "zsh"
+
+# ── Completions ──────────────────────────────────────────────
+
+[plugins.zsh-completions]
+github = "zsh-users/zsh-completions"
+
+# ── Syntax & Suggestions ─────────────────────────────────────
+
+[plugins.zsh-syntax-highlighting]
+github = "zsh-users/zsh-syntax-highlighting"
+
+[plugins.zsh-autosuggestions]
+github = "zsh-users/zsh-autosuggestions"
+
+# ── History ──────────────────────────────────────────────────
+
+[plugins.zsh-history-substring-search]
+github = "zsh-users/zsh-history-substring-search"
