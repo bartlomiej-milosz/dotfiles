@@ -1,78 +1,73 @@
-# ── Font ────────────────────────────────────────────────────
-font-family = Geist Mono
-font-size = 16
+# ── Font ─────────────────────────────────────────────────────
+font-family        = Geist Mono
+font-size          = 16
 adjust-cell-height = 15%
 
-# Disable ligatures — cleaner for code
+# Disable ligatures
 font-feature = -calt
 font-feature = -liga
 font-feature = -dlig
 
 # ── Theme ────────────────────────────────────────────────────
-# Synced with Neovim (zenwritten via auto-dark-mode)
 theme = dark:zenwritten_dark,light:zenwritten_light
 
 # ── Window ───────────────────────────────────────────────────
-window-padding-x = 10
-window-padding-y = 10
-window-padding-balance = true    # equal padding around splits
-
-# Hide title bar on macOS for a cleaner look
-# (content extends to top of window)
-macos-titlebar-style = hidden
+window-padding-x       = 10
+window-padding-y       = 10
+window-padding-balance = true
+macos-titlebar-style   = native
 
 # ── Cursor ───────────────────────────────────────────────────
-cursor-style = bar             # bar | block | underline
+cursor-style       = bar
 cursor-style-blink = true
 
 # ── Scrollback ───────────────────────────────────────────────
 scrollback-limit = 10000
 
 # ── Shell integration ────────────────────────────────────────
-# Enables: cursor shape per mode, prompt marking, title updates
-shell-integration = zsh
+shell-integration          = zsh
 shell-integration-features = cursor,sudo,title
 
 # ── macOS ────────────────────────────────────────────────────
-macos-option-as-alt = true     # alt key works in Neovim (e.g. <A-j>)
-macos-window-shadow = false    # no drop shadow on window
+macos-option-as-alt = true
+macos-window-shadow = true
 
 # ── Keybindings ──────────────────────────────────────────────
 
 # Copy / paste
-keybind = performable:ctrl+c = copy_to_clipboard
-keybind = ctrl+v             = paste_from_clipboard
+keybind = performable:ctrl+c=copy_to_clipboard
+keybind = ctrl+v=paste_from_clipboard
 
 # Selection
-keybind = ctrl+a = select_all
+keybind = ctrl+a=select_all
 
 # Tabs
-keybind = ctrl+t   = new_tab
-keybind = ctrl+1   = goto_tab:1
-keybind = ctrl+2   = goto_tab:2
-keybind = ctrl+3   = goto_tab:3
-keybind = ctrl+4   = goto_tab:4
-keybind = ctrl+5   = goto_tab:5
-keybind = ctrl+6   = goto_tab:6
-keybind = ctrl+7   = goto_tab:7
-keybind = ctrl+8   = goto_tab:8
-keybind = ctrl+9   = goto_tab:9
+keybind = ctrl+t=new_tab
+keybind = ctrl+1=goto_tab:1
+keybind = ctrl+2=goto_tab:2
+keybind = ctrl+3=goto_tab:3
+keybind = ctrl+4=goto_tab:4
+keybind = ctrl+5=goto_tab:5
+keybind = ctrl+6=goto_tab:6
+keybind = ctrl+7=goto_tab:7
+keybind = ctrl+8=goto_tab:8
+keybind = ctrl+9=goto_tab:9
 
 # Splits
-keybind = cmd+d         = new_split:right
-keybind = cmd+shift+d   = new_split:down
-keybind = cmd+shift+w   = close_surface
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+keybind = cmd+shift+w=close_surface
 
-# Navigate splits (matches Neovim ctrl+hjkl)
-keybind = cmd+alt+h = goto_split:left
-keybind = cmd+alt+j = goto_split:bottom
-keybind = cmd+alt+k = goto_split:top
-keybind = cmd+alt+l = goto_split:right
+# Navigate splits
+keybind = cmd+alt+h=goto_split:left
+keybind = cmd+alt+j=goto_split:bottom
+keybind = cmd+alt+k=goto_split:top
+keybind = cmd+alt+l=goto_split:right
 
 # Font size
-keybind = cmd+equal = increase_font_size:1
-keybind = cmd+minus = decrease_font_size:1
-keybind = cmd+0     = reset_font_size
+keybind = cmd+equal=increase_font_size:1
+keybind = cmd+minus=decrease_font_size:1
+keybind = cmd+0=reset_font_size
 
-# Fix shift+enter for e.g. REPLs (sends ESC + CR)
-keybind = shift+enter = text:\x1b\r
+# Fix shift+enter for REPLs
+keybind = shift+enter=text:\x1b\r
