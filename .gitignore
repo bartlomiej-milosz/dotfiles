@@ -5,10 +5,18 @@ zsh/.zsh/antidote
 
 # macOS
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
 
-# editors
+# editors / tooling
 .vscode
 .idea
+.claude/
+
+# lua-language-server config auto-created at repo root
+# (the real per-config one in nvim/.config/nvim/ stays tracked)
+/.luarc.json
 
 # notes
 TODO.md
@@ -22,7 +30,5 @@ _nvim-dist
 *.backup
 *~
 
-# other
-
-.idea/
-.vscode/
+# logs
+*.log
