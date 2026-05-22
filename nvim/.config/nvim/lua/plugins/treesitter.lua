@@ -50,25 +50,30 @@ return {
         },
     },
 
-    -- Textobjects (still on `master` upstream; works with parsers installed by main branch).
+    -- Textobjects on the `main` branch (uses the new nvim-treesitter API).
     {
         "nvim-treesitter/nvim-treesitter-textobjects",
-        branch  = "master",
-        event   = { "BufReadPost", "BufNewFile" },
-        config  = function()
-            local move = require("nvim-treesitter.textobjects.move")
-            local function repeatable(fn, query, group)
-                return function() fn(query, group) end
+        branch       = "main",
+        event        = { "BufReadPost", "BufNewFile" },
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
+        config       = function()
+            require("nvim-treesitter-textobjects").setup({
+                move = { set_jumps = true },
+            })
+
+            local move = require("nvim-treesitter-textobjects.move")
+            local function jump(fn, query)
+                return function() fn(query, "textobjects") end
             end
             local map = vim.keymap.set
-            map("n", "]f", repeatable(move.goto_next_start,     "@function.outer", "textobjects"), { desc = "Next function start" })
-            map("n", "]c", repeatable(move.goto_next_start,     "@class.outer",    "textobjects"), { desc = "Next class start" })
-            map("n", "]F", repeatable(move.goto_next_end,       "@function.outer", "textobjects"), { desc = "Next function end" })
-            map("n", "]C", repeatable(move.goto_next_end,       "@class.outer",    "textobjects"), { desc = "Next class end" })
-            map("n", "[f", repeatable(move.goto_previous_start, "@function.outer", "textobjects"), { desc = "Prev function start" })
-            map("n", "[c", repeatable(move.goto_previous_start, "@class.outer",    "textobjects"), { desc = "Prev class start" })
-            map("n", "[F", repeatable(move.goto_previous_end,   "@function.outer", "textobjects"), { desc = "Prev function end" })
-            map("n", "[C", repeatable(move.goto_previous_end,   "@class.outer",    "textobjects"), { desc = "Prev class end" })
+            map({ "n", "x", "o" }, "]f", jump(move.goto_next_start,     "@function.outer"), { desc = "Next function start" })
+            map({ "n", "x", "o" }, "]c", jump(move.goto_next_start,     "@class.outer"),    { desc = "Next class start" })
+            map({ "n", "x", "o" }, "]F", jump(move.goto_next_end,       "@function.outer"), { desc = "Next function end" })
+            map({ "n", "x", "o" }, "]C", jump(move.goto_next_end,       "@class.outer"),    { desc = "Next class end" })
+            map({ "n", "x", "o" }, "[f", jump(move.goto_previous_start, "@function.outer"), { desc = "Prev function start" })
+            map({ "n", "x", "o" }, "[c", jump(move.goto_previous_start, "@class.outer"),    { desc = "Prev class start" })
+            map({ "n", "x", "o" }, "[F", jump(move.goto_previous_end,   "@function.outer"), { desc = "Prev function end" })
+            map({ "n", "x", "o" }, "[C", jump(move.goto_previous_end,   "@class.outer"),    { desc = "Prev class end" })
         end,
     },
 }
