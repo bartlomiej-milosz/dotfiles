@@ -19,6 +19,8 @@ return {
             ensure_installed = {
                 -- Formatters (driven by conform.nvim)
                 "stylua", "shfmt", "gofumpt", "goimports", "golines",
+                -- Linters (shellcheck is picked up by bashls automatically when on PATH)
+                "shellcheck",
                 -- Debug adapters
                 "debugpy", "delve",
                 -- LSPs not auto-installed via mason-lspconfig
