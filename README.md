@@ -21,6 +21,7 @@ Each top-level directory is a Stow package that mirrors the target home director
 ```
 dotfiles/
 ├── ghostty/        →  ~/.config/ghostty/
+├── git/            →  ~/.gitconfig
 ├── ideavim/        →  ~/.ideavimrc
 ├── nvim/           →  ~/.config/nvim/
 ├── sheldon/        →  ~/.config/sheldon/
@@ -63,6 +64,16 @@ After it finishes: `exec zsh`, then open `nvim` once to let mason finish.
 - GNU coreutils on macOS (consistent `ls`, `sed`, `grep` behaviour across platforms)
 - Conditional aliases: `ls`/`ll`/`la`/`lt` → `eza`, `cat` → `bat`, `cd` → `zoxide`
 - Git shorthand: `g`, `gs`, `ga`, `gc`, `gp`, `gl`
+
+### Git (`git/`)
+
+Sensible global defaults in `~/.gitconfig`:
+
+- Identity, `nvim` as editor, `main` as default branch
+- `push.autoSetupRemote` (no more `--set-upstream`), `push.followTags`, `pull.rebase`
+- `fetch.prune`, `rebase.autoStash` + `autoSquash` + `updateRefs`, `rerere` enabled
+- `diff.algorithm = histogram`, `merge.conflictStyle = zdiff3`, `help.autocorrect = prompt`
+- A few aliases that don't overlap with the zsh `g*` shortcuts: `st`, `last`, `unstage`, `amend`, `graph`
 
 ### Sheldon plugins (`sheldon/`)
 
@@ -110,15 +121,15 @@ nvim/.config/nvim/
         └── zen-mode.lua    —  distraction-free writing
 ```
 
-**Theme**: [Rose Pine](https://github.com/rose-pine/neovim) — `main` (dark) / `dawn` (light).
-Switches between dark and light variants based on the macOS system appearance via [auto-dark-mode.nvim](https://github.com/f-person/auto-dark-mode.nvim). Ghostty uses the matching `Rose Pine` / `Rose Pine Dawn` theme so the terminal and editor stay in sync.
+**Theme**: [vim-colors-xcode](https://github.com/lunacookies/vim-colors-xcode) — Apple's native Xcode palette, `xcodedark` (dark) / `xcodelight` (light).
+Switches between dark and light variants based on the macOS system appearance via [auto-dark-mode.nvim](https://github.com/f-person/auto-dark-mode.nvim). Ghostty uses the matching `Apple System Colors` theme so the terminal and editor share one clean, macOS-native look.
 
 External tooling (LSPs, formatters, linters, debug adapters) is installed by **mason** on first launch; see `scripts/install.sh` for the runtimes it needs.
 
 ### Ghostty (`ghostty/`)
 
 - **Font**: JetBrains Mono Medium, 20px, ligatures disabled
-- **Theme**: `dark:Rose Pine, light:Rose Pine Dawn` — follows macOS appearance
+- **Theme**: `dark:Apple System Colors, light:Apple System Colors Light` — follows macOS appearance
 - **Window**: tabbed titlebar, zero padding (balanced), window shadow on
 - **Splits**: `cmd+d` right, `cmd+shift+d` down, `cmd+shift+w` close; navigate with `cmd+alt+hjkl`
 - **Tabs**: `ctrl+t` new tab, `ctrl+1-9` jump to tab
