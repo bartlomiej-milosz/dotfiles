@@ -20,9 +20,11 @@ return {
                 -- Formatters (driven by conform.nvim)
                 "stylua", "shfmt", "gofumpt", "goimports", "golines",
                 "prettierd",
-                -- Linters (shellcheck is picked up by bashls automatically when on PATH;
-                -- luacheck is wired through nvim-lint).
-                "shellcheck", "luacheck",
+                -- Linters: shellcheck is picked up by bashls automatically when on PATH.
+                -- luacheck is NOT in this list — it needs luarocks to build, so we install
+                -- it via Homebrew instead (`brew install luacheck`). nvim-lint picks it up
+                -- from PATH.
+                "shellcheck",
                 -- Debug adapters
                 "debugpy", "delve",
                 -- LSPs not auto-installed via mason-lspconfig
