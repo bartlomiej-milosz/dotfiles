@@ -13,6 +13,7 @@ TARGET_DIR="$HOME"
 
 PACKAGES=(
   ghostty
+  git
   nvim
   sheldon
   starship
