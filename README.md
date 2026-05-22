@@ -10,7 +10,7 @@ Built around full control over the environment — native binaries, minimal depe
 | Shell | [Zsh](https://www.zsh.org/) + [Sheldon](https://sheldon.cli.rs/) (plugin manager) |
 | Prompt | [Starship](https://starship.rs/) |
 | Terminal | [Ghostty](https://ghostty.org/) |
-| Editor | [Neovim](https://neovim.io/) (LazyVim-based) + [IdeaVim](https://github.com/JetBrains/ideavim) |
+| Editor | [Neovim](https://neovim.io/) (custom [lazy.nvim](https://github.com/folke/lazy.nvim) config) + [IdeaVim](https://github.com/JetBrains/ideavim) |
 | Dotfile manager | [GNU Stow](https://www.gnu.org/software/stow/) |
 | CLI replacements | `eza` · `bat` · `zoxide` · `fzf` · `fd` |
 
@@ -31,32 +31,33 @@ dotfiles/
 
 ## Quick start
 
-### Prerequisites
-
-Install dependencies on macOS:
-
-```bash
-brew install git stow
-bash scripts/zsh_deps_mac.sh
-```
-
-`zsh_deps_mac.sh` installs: `sheldon starship eza bat zoxide fzf fd` and GNU coreutils (`coreutils gnu-sed grep gawk bash`).
-
-### Clone and link
+On a fresh macOS machine, clone and run the bootstrap script:
 
 ```bash
 git clone git@github.com:bartlomiej-milosz/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./scripts/sync.sh
+./scripts/install.sh
 ```
 
-`sync.sh` runs `stow --restow` for each package. Conflicts are resolved automatically with `--adopt`.
+`install.sh` is idempotent and does everything end to end:
+
+1. installs Homebrew if it's missing,
+2. installs every CLI tool and GUI cask the dotfiles depend on,
+3. links all packages via `scripts/sync.sh` (`stow --restow`).
+
+It installs the formulae `git stow sheldon starship eza bat zoxide fzf fd ripgrep`,
+GNU userland (`coreutils gnu-sed grep gawk bash`), `neovim tree-sitter luacheck`,
+the runtimes `node go python`, and the casks `ghostty` + JetBrains Mono fonts.
+Neovim's LSPs / formatters / linters / debug adapters are installed by **mason**
+on first launch — this script only provides the runtimes mason builds them with.
+
+After it finishes: `exec zsh`, then open `nvim` once to let mason finish.
 
 ## Packages
 
 ### Zsh (`zsh/`)
 
-- 50k-line history shared across sessions with deduplication and timestamps
+- Effectively unlimited history (1M lines) shared across sessions with deduplication and timestamps
 - Tab completion with case-insensitive matching and colored output
 - `AUTO_CD`, `AUTO_PUSHD`, `CORRECT` enabled
 - GNU coreutils on macOS (consistent `ls`, `sed`, `grep` behaviour across platforms)
@@ -85,34 +86,44 @@ Minimal two-line prompt showing: directory → git branch + status → Python / 
 
 ### Neovim (`nvim/`)
 
-LazyVim-based configuration with a minimal custom layer on top:
+A lean custom configuration on `lazy.nvim`:
 
 ```
 nvim/.config/nvim/
-├── init.lua              —  entry point
+├── init.lua                —  entry point
 └── lua/
     ├── config/
-    │   ├── options.lua   —  editor options
-    │   ├── keymaps.lua   —  custom key bindings
-    │   ├── autocmds.lua  —  auto commands
-    │   └── lazy.lua      —  lazy.nvim bootstrap
+    │   ├── options.lua     —  editor options
+    │   ├── keymaps.lua     —  custom key bindings
+    │   ├── autocmds.lua    —  auto commands
+    │   └── lazy.lua        —  lazy.nvim bootstrap
     └── plugins/
-        ├── theme.lua     —  zenbones/zenwritten colorscheme
-        └── zen-mode.lua  —  distraction-free writing
+        ├── lsp.lua         —  mason + lspconfig (basedpyright, gopls, bashls, marksman, lua_ls)
+        ├── completion.lua  —  blink.cmp completion
+        ├── format.lua      —  conform.nvim (stylua, shfmt, gofumpt, prettierd)
+        ├── lint.lua        —  nvim-lint (luacheck)
+        ├── treesitter.lua  —  syntax / parsers
+        ├── dap.lua         —  debugging (debugpy, delve)
+        ├── mini.lua        —  mini.nvim modules + clue popup
+        ├── noice.lua       —  command-palette cmdline + LSP UI
+        ├── theme.lua       —  Rose Pine colorscheme
+        └── zen-mode.lua    —  distraction-free writing
 ```
 
-**Theme**: [zenwritten](https://github.com/zenbones-theme/zenbones.nvim) — zero-hue, contrast-based.
-Automatically switches between dark and light variants based on the macOS system appearance via [auto-dark-mode.nvim](https://github.com/f-person/auto-dark-mode.nvim). Ghostty uses the matching `zenwritten_dark` / `zenwritten_light` theme so the terminal and editor stay in sync.
+**Theme**: [Rose Pine](https://github.com/rose-pine/neovim) — `main` (dark) / `dawn` (light).
+Switches between dark and light variants based on the macOS system appearance via [auto-dark-mode.nvim](https://github.com/f-person/auto-dark-mode.nvim). Ghostty uses the matching `Rose Pine` / `Rose Pine Dawn` theme so the terminal and editor stay in sync.
+
+External tooling (LSPs, formatters, linters, debug adapters) is installed by **mason** on first launch; see `scripts/install.sh` for the runtimes it needs.
 
 ### Ghostty (`ghostty/`)
 
-- **Font**: Geist Mono 16px, ligatures disabled
-- **Theme**: `dark:zenwritten_dark, light:zenwritten_light` — follows macOS appearance
-- **Window**: hidden title bar, balanced padding, no drop shadow
-- **Splits**: `cmd+d` vertical, `cmd+shift+d` horizontal; navigate with `cmd+alt+hjkl`
+- **Font**: JetBrains Mono Medium, 20px, ligatures disabled
+- **Theme**: `dark:Rose Pine, light:Rose Pine Dawn` — follows macOS appearance
+- **Window**: tabbed titlebar, zero padding (balanced), window shadow on
+- **Splits**: `cmd+d` right, `cmd+shift+d` down, `cmd+shift+w` close; navigate with `cmd+alt+hjkl`
 - **Tabs**: `ctrl+t` new tab, `ctrl+1-9` jump to tab
 
-Eighteen [zenbones](https://github.com/zenbones-theme/zenbones.nvim) colour themes are included under `ghostty/.config/ghostty/themes/` for easy switching.
+A set of [zenbones](https://github.com/zenbones-theme/zenbones.nvim) colour themes is also bundled under `ghostty/.config/ghostty/themes/` as ready-to-use alternatives.
 
 ### IdeaVim (`ideavim/`)
 
@@ -141,10 +152,10 @@ Full Vim emulation for IntelliJ IDEA with `<Space>` as leader and [which-key](ht
 
 | Script | Usage | Description |
 | :--- | :--- | :--- |
+| `scripts/install.sh` | `./scripts/install.sh` | Full bootstrap: Homebrew + all packages/casks + stow |
 | `scripts/sync.sh` | `./scripts/sync.sh` | Stow (or re-stow) all packages |
 | `scripts/purge.sh` | `./scripts/purge.sh` | Unstow all packages and remove runtime caches |
 | `scripts/purge.sh <pkg>` | `./scripts/purge.sh nvim` | Unstow a single package |
-| `scripts/zsh_deps_mac.sh` | `bash scripts/zsh_deps_mac.sh` | Install all macOS Homebrew dependencies |
 
 ## Maintenance
 
