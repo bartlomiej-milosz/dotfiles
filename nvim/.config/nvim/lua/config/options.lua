@@ -65,3 +65,10 @@ opt.mouse                = "a" -- enable mouse in all modes
 
 -- ── Ignored files ────────────────────────────────────────────
 opt.wildignore:append(".DS_Store")
+
+-- ── Disable unused language providers ────────────────────────
+-- Silences healthcheck warnings for Perl/Python/Ruby/Node remote plugins.
+vim.g.loaded_perl_provider    = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider    = 0
+vim.g.loaded_node_provider    = 0

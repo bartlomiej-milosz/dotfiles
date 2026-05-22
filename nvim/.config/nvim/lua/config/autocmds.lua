@@ -31,10 +31,22 @@ autocmd("FileType", {
     end,
 })
 
+-- Go: tabs (gofmt convention)
+autocmd("FileType", {
+    group    = augroup("GoIndent", { clear = true }),
+    pattern  = { "go" },
+    callback = function()
+        vim.opt_local.expandtab   = false
+        vim.opt_local.shiftwidth  = 4
+        vim.opt_local.tabstop     = 4
+        vim.opt_local.softtabstop = 4
+    end,
+})
+
 -- Close auxiliary windows with q
 autocmd("FileType", {
     group    = augroup("QuickClose", { clear = true }),
-    pattern  = { "help", "man", "qf", "lspinfo", "checkhealth" },
+    pattern  = { "help", "man", "qf", "lspinfo", "checkhealth", "dap-float", "dap-repl" },
     callback = function()
         vim.keymap.set("n", "q", "<cmd>close<CR>", { buffer = true, silent = true })
     end,
@@ -55,7 +67,7 @@ autocmd("BufReadPost", {
 -- Disable mini.indentscope in special buffers
 autocmd("FileType", {
     group    = augroup("MiniIndentscopeDisable", { clear = true }),
-    pattern  = { "help", "man", "lazy", "mason", "lspinfo", "TelescopePrompt" },
+    pattern  = { "help", "man", "lazy", "mason", "lspinfo", "checkhealth", "starter", "minifiles", "dap-repl", "dap-float" },
     callback = function()
         vim.b.miniindentscope_disable = true
     end,

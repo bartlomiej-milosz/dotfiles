@@ -60,3 +60,15 @@ map("n", "<leader>ik", "m`O<Esc>``", { desc = "Insert blank line above" })
 -- Navigate wrapped lines naturally
 map({ "n", "v" }, "j", "gj", { desc = "Down (wrapped)" })
 map({ "n", "v" }, "k", "gk", { desc = "Up (wrapped)" })
+
+-- ── Toggles ──────────────────────────────────────────────────
+
+map("n", "<leader>uw", function()
+    vim.opt_local.wrap = not vim.opt_local.wrap:get()
+    vim.notify("Wrap: " .. (vim.opt_local.wrap:get() and "on" or "off"))
+end, { desc = "Toggle soft wrap" })
+
+-- ── Comments (mini.comment) ──────────────────────────────────
+-- `gc` / `gcc` still work; these are familiar aliases.
+map("n", "<leader>/", "gcc", { desc = "Comment line", remap = true })
+map("x", "<leader>/", "gc",  { desc = "Comment selection", remap = true })
