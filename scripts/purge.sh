@@ -22,9 +22,10 @@ PACKAGES=(
 )
 
 # Files/dirs to remove after unstowing (not managed by stow)
-# Add anything that gets created at runtime and should be cleaned up
+# Add anything that gets created at runtime and should be cleaned up.
+# NOTE: ~/.zsh_history is deliberately NOT listed — command history is kept
+# across purges so frequent dotfile reinstalls don't wipe it.
 EXTRA_CLEANUP=(
-  "$HOME/.zsh_history"
   "$HOME/.zcompdump"
   "$HOME/.local/share/nvim"    # lazy.nvim plugins
   "$HOME/.local/state/nvim"    # nvim state

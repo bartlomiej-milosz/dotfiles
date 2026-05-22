@@ -3,11 +3,15 @@ ZSH_DISABLE_COMPFIX=true
 
 # ── History ──────────────────────────────────────────────────
 HISTFILE="$HOME/.zsh_history"
-HISTSIZE=50000
-SAVEHIST=50000
+# Effectively unlimited. HISTSIZE (in-memory) is kept slightly larger than
+# SAVEHIST (on-disk) so dedup runs on the larger set before writing.
+HISTSIZE=1200000
+SAVEHIST=1000000
 
 setopt HIST_IGNORE_ALL_DUPS   # no duplicate entries
 setopt HIST_IGNORE_SPACE      # ignore commands starting with space
+setopt HIST_REDUCE_BLANKS     # strip superfluous blanks before saving
+setopt HIST_FIND_NO_DUPS      # don't show dupes when cycling search results
 setopt HIST_VERIFY            # show expanded history before executing
 setopt SHARE_HISTORY          # share history across sessions
 setopt EXTENDED_HISTORY       # save timestamp and duration
