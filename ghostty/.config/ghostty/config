@@ -11,7 +11,7 @@ font-feature = -liga
 font-feature = -dlig
 
 # ── Theme ────────────────────────────────────────────────────
-theme = dark:Rose Pine,light:Rose Pine Dawn
+theme = dark:Apple System Colors,light:Apple System Colors Light
 
 # ── Window ───────────────────────────────────────────────────
 window-padding-x       = 0
