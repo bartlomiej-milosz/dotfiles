@@ -1,7 +1,7 @@
-local map            = vim.keymap.set
+local map = vim.keymap.set
 
 -- ── Leader ──────────────────────────────────────────────────
-vim.g.mapleader      = " "
+vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 
 -- ── General ─────────────────────────────────────────────────
@@ -64,11 +64,11 @@ map({ "n", "v" }, "k", "gk", { desc = "Up (wrapped)" })
 -- ── Toggles ──────────────────────────────────────────────────
 
 map("n", "<leader>uw", function()
-    vim.opt_local.wrap = not vim.opt_local.wrap:get()
-    vim.notify("Wrap: " .. (vim.opt_local.wrap:get() and "on" or "off"))
+	vim.opt_local.wrap = not vim.opt_local.wrap:get()
+	vim.notify("Wrap: " .. (vim.opt_local.wrap:get() and "on" or "off"))
 end, { desc = "Toggle soft wrap" })
 
 -- ── Comments (mini.comment) ──────────────────────────────────
 -- `gc` / `gcc` still work; these are familiar aliases.
 map("n", "<leader>/", "gcc", { desc = "Comment line", remap = true })
-map("x", "<leader>/", "gc",  { desc = "Comment selection", remap = true })
+map("x", "<leader>/", "gc", { desc = "Comment selection", remap = true })

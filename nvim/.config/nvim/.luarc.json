@@ -1,5 +1,4 @@
 {
-    "diagnostics.disable": [
-        "undefined-doc-name"
-    ]
+  "diagnostics.disable": ["undefined-doc-name"]
 }
+
