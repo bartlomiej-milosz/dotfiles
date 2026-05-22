@@ -10,7 +10,7 @@ Built around full control over the environment — native binaries, minimal depe
 | Shell | [Zsh](https://www.zsh.org/) + [Sheldon](https://sheldon.cli.rs/) (plugin manager) |
 | Prompt | [Starship](https://starship.rs/) |
 | Terminal | [Ghostty](https://ghostty.org/) |
-| Editor | [Neovim](https://neovim.io/) (custom [lazy.nvim](https://github.com/folke/lazy.nvim) config) + [IdeaVim](https://github.com/JetBrains/ideavim) |
+| Editor | [Neovim](https://neovim.io/) (custom [lazy.nvim](https://github.com/folke/lazy.nvim) config) · [Zed](https://zed.dev/) · [IdeaVim](https://github.com/JetBrains/ideavim) |
 | Dotfile manager | [GNU Stow](https://www.gnu.org/software/stow/) |
 | CLI replacements | `eza` · `bat` · `zoxide` · `fzf` · `fd` |
 
@@ -26,6 +26,7 @@ dotfiles/
 ├── nvim/           →  ~/.config/nvim/
 ├── sheldon/        →  ~/.config/sheldon/
 ├── starship/       →  ~/.config/starship.toml
+├── zed/            →  ~/.config/zed/
 ├── zsh/            →  ~/.zshrc
 └── scripts/        —  utility scripts (not stowed)
 ```
@@ -158,6 +159,20 @@ Full Vim emulation for IntelliJ IDEA with `<Space>` as leader and [which-key](ht
 > ```bash
 > stow --dir=~/dotfiles --target="$HOME" ideavim
 > ```
+
+### Zed (`zed/`)
+
+[Zed](https://zed.dev/) configuration linked into `~/.config/zed/`:
+
+| File | Purpose |
+| :--- | :--- |
+| `settings.json` | Editor settings — vim mode, JetBrains base keymap, AI/telemetry off, panel layout, shfmt for shell |
+| `keymap.json` | `<Space>` leader bindings (find / code / search / git), `ctrl-j`/`ctrl-k` menu navigation |
+| `debug.json` | Debug task templates for Python and JavaScript |
+
+**Theme**: [macOS Classic](https://github.com/huacnlee/zed-theme-macos-classic) (light/dark) — install via Zed's extensions (`zed: extensions`); it isn't a dotfile.
+
+> Only the text config files are managed. Zed's `prompts/` (binary DB) and installed `extensions/` are intentionally left out.
 
 ## Scripts
 

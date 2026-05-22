@@ -17,6 +17,7 @@ PACKAGES=(
   nvim
   sheldon
   starship
+  zed
   zsh
 )
 
