@@ -48,7 +48,24 @@ return {
             vim.notify = require("mini.notify").make_notify()
 
             -- ── Files ────────────────────────────────────────────────────────
+            local ignore_names = {
+                [".DS_Store"]  = true,
+                ["Thumbs.db"]  = true,
+                [".localized"] = true,
+            }
+            local ignore_patterns = { "%.pyc$", "%.swp$", "%.swo$" }
+            local function is_ignored(name)
+                if ignore_names[name] then return true end
+                for _, p in ipairs(ignore_patterns) do
+                    if name:match(p) then return true end
+                end
+                return false
+            end
+
             require("mini.files").setup({
+                content = {
+                    filter = function(fs_entry) return not is_ignored(fs_entry.name) end,
+                },
                 windows = { preview = true, width_preview = 80 },
                 mappings = {
                     close       = "q",

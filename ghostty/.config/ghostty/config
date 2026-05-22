@@ -1,6 +1,8 @@
 # ── Font ─────────────────────────────────────────────────────
-font-family        = Geist Mono
-font-size          = 16
+font-family        = JetBrains Mono
+font-style         = Medium
+font-size          = 20
+font-thicken       = false
 adjust-cell-height = 15%
 
 # Disable ligatures
@@ -9,13 +11,13 @@ font-feature = -liga
 font-feature = -dlig
 
 # ── Theme ────────────────────────────────────────────────────
-theme = dark:zenwritten_dark,light:zenwritten_light
+theme = dark:Rose Pine,light:Rose Pine Dawn
 
 # ── Window ───────────────────────────────────────────────────
-window-padding-x       = 10
-window-padding-y       = 10
+window-padding-x       = 0
+window-padding-y       = 0
 window-padding-balance = true
-macos-titlebar-style   = native
+macos-titlebar-style   = tabs
 
 # ── Cursor ───────────────────────────────────────────────────
 cursor-style       = bar

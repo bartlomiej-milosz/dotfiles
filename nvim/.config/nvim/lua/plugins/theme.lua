@@ -1,27 +1,25 @@
 return {
-    -- ── zenbones: contrast-based, low-color colorscheme collection ──
+    -- ── Rose Pine: minimal, modern, paper-like light + soho-style dark ──
     {
-        "zenbones-theme/zenbones.nvim",
-        dependencies = "rktjmp/lush.nvim",
-        lazy         = false,
-        priority     = 1000,
-        config       = function()
-            -- zenwritten: zero hue/saturation variant — ideal for long sessions
-            -- Configuration is set via vim.g before applying the colorscheme
-
-            -- Dark variant: default lightness
-            --   'stark' = higher contrast  |  'warm' = warmer, lower contrast
-            --   omit for balanced default (recommended)
-            vim.g.zenwritten = {
-                darken_comments                    = 38, -- slightly muted comments
-                darken_non_text                    = 38,
-                solid_line_nr                      = false, -- subtle line numbers
-                solid_float_border                 = true, -- visible borders on floating windows
-                colorize_diagnostic_underline_text = true,
-            }
-
-            -- Light variant: same config, 'dim' lightness feels more paper-like
-            -- Lightness is set dynamically by auto-dark-mode below
+        "rose-pine/neovim",
+        name     = "rose-pine",
+        lazy     = false,
+        priority = 1000,
+        config   = function()
+            require("rose-pine").setup({
+                variant      = "auto", -- follow vim.opt.background ("dark" -> dark_variant, "light" -> dawn)
+                dark_variant = "main", -- "main" (default) | "moon" (softer dark)
+                styles       = {
+                    bold        = true,
+                    italic      = true,
+                    transparency = false,
+                },
+                highlight_groups = {
+                    -- Subtle line numbers; keep cursor line number readable.
+                    LineNr       = { fg = "muted" },
+                    CursorLineNr = { fg = "text", bold = true },
+                },
+            })
         end,
     },
 
@@ -35,14 +33,12 @@ return {
 
             set_dark_mode = function()
                 vim.opt.background = "dark"
-                vim.cmd.colorscheme("zenwritten")
+                vim.cmd.colorscheme("rose-pine")
             end,
 
             set_light_mode = function()
                 vim.opt.background = "light"
-                -- 'dim' lightness: softer, paper-like — easier on eyes in bright light
-                vim.g.zenwritten_lightness = "dim"
-                vim.cmd.colorscheme("zenwritten")
+                vim.cmd.colorscheme("rose-pine")
             end,
         },
     },
