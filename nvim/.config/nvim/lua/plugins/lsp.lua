@@ -19,6 +19,7 @@ return {
             ensure_installed = {
                 -- Formatters (driven by conform.nvim)
                 "stylua", "shfmt", "gofumpt", "goimports", "golines",
+                "prettierd",
                 -- Linters (shellcheck is picked up by bashls automatically when on PATH)
                 "shellcheck",
                 -- Debug adapters
@@ -110,6 +111,11 @@ return {
                             globPattern = "*@(.sh|.inc|.bash|.command)",
                         },
                     },
+                },
+                marksman = {
+                    -- Markdown LSP: cross-file references, link diagnostics, completion,
+                    -- goto-definition for headings & wiki links.
+                    filetypes = { "markdown", "markdown.mdx" },
                 },
                 gopls = {
                     settings = {
