@@ -165,11 +165,31 @@ return {
 				vim.lsp.enable(name)
 			end
 
+			-- Neovim 0.12's vim.glob.to_lpeg rejects empty brace globs like
+			-- `**/*.{}`, which some servers (e.g. bash-language-server) advertise
+			-- in their workspace.fileOperations filters. mini.files runs to_lpeg on
+			-- these when applying file actions and throws E5108. Drop the bad ones.
+			local function sanitize_file_operations(client)
+				local fo = vim.tbl_get(client or {}, "server_capabilities", "workspace", "fileOperations")
+				if type(fo) ~= "table" then
+					return
+				end
+				for _, op in pairs(fo) do
+					if type(op) == "table" and type(op.filters) == "table" then
+						op.filters = vim.tbl_filter(function(f)
+							local glob = f and f.pattern and f.pattern.glob
+							return glob == nil or (pcall(vim.glob.to_lpeg, glob))
+						end, op.filters)
+					end
+				end
+			end
+
 			-- ── Per-buffer LSP keymaps ───────────────────────────────────
 			vim.api.nvim_create_autocmd("LspAttach", {
 				group = vim.api.nvim_create_augroup("UserLspAttach", { clear = true }),
 				callback = function(args)
 					local buf = args.buf
+					sanitize_file_operations(vim.lsp.get_client_by_id(args.data.client_id))
 					local map = function(mode, lhs, rhs, desc)
 						vim.keymap.set(mode, lhs, rhs, { buffer = buf, desc = desc, silent = true })
 					end

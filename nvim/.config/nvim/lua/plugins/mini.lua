@@ -44,10 +44,7 @@ return {
 					hex = require("mini.hipatterns").gen_highlighter.hex_color(),
 				},
 			})
-			require("mini.notify").setup({
-				lsp_progress = { enable = true, duration_last = 1500 },
-			})
-			vim.notify = require("mini.notify").make_notify()
+			-- Notifications + LSP progress are handled by noice (see plugins/noice.lua).
 
 			-- ── Files ────────────────────────────────────────────────────────
 			local ignore_names = {

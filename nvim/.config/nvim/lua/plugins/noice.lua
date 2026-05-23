@@ -22,6 +22,23 @@ return {
 					["vim.lsp.util.stylize_markdown"] = true,
 					["cmp.entry.get_documentation"] = true,
 				},
+				-- LSP progress (replaces mini.notify's lsp_progress).
+				progress = { enabled = true },
+			},
+
+			-- Route all messages + vim.notify through noice's built-in "mini"
+			-- view (corner, no extra deps). This fully replaces mini.notify.
+			messages = {
+				enabled = true,
+				view = "mini",
+				view_error = "mini",
+				view_warn = "mini",
+				view_history = "messages",
+				view_search = "virtualtext",
+			},
+			notify = {
+				enabled = true,
+				view = "mini",
 			},
 
 			presets = {
