@@ -47,12 +47,21 @@ return {
 			-- Notifications + LSP progress are handled by noice (see plugins/noice.lua).
 
 			-- ── Files ────────────────────────────────────────────────────────
+			-- Noise we never want to see. .env / .venv are intentionally NOT
+			-- here — they stay visible (kept in sync with neo-tree).
 			local ignore_names = {
 				[".DS_Store"] = true,
 				["Thumbs.db"] = true,
 				[".localized"] = true,
+				[".git"] = true,
+				["node_modules"] = true,
+				["__pycache__"] = true,
+				[".ruff_cache"] = true,
+				[".mypy_cache"] = true,
+				[".pytest_cache"] = true,
+				[".ipynb_checkpoints"] = true,
 			}
-			local ignore_patterns = { "%.pyc$", "%.swp$", "%.swo$" }
+			local ignore_patterns = { "%.pyc$", "%.pyo$", "%.swp$", "%.swo$", "%.egg%-info$" }
 			local function is_ignored(name)
 				if ignore_names[name] then
 					return true
@@ -180,13 +189,7 @@ return {
 				end,
 				desc = "File explorer (here)",
 			},
-			{
-				"<leader>E",
-				function()
-					require("mini.files").open(vim.uv.cwd(), false)
-				end,
-				desc = "File explorer (cwd)",
-			},
+			-- <leader>E is neo-tree (see plugins/neotree.lua).
 
 			-- ── Pick (mini.pick + mini.extra) ────────────────────────────────
 			{ "<leader><leader>", "<cmd>Pick files<cr>", desc = "Find files" },
