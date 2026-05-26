@@ -35,16 +35,17 @@ macos-option-as-alt = true
 macos-window-shadow = true
 
 # ── Keybindings ──────────────────────────────────────────────
+# Unified on ctrl+shift so they behave identically on macOS and Linux.
+# (cmd aliases to Super on Linux, which collides with GNOME; ctrl+shift is
+# free on both and leaves ctrl+c for SIGINT and ctrl+t for fzf.)
 
-# Copy / paste
-keybind = performable:ctrl+c=copy_to_clipboard
-keybind = ctrl+v=paste_from_clipboard
-
-# Selection
-keybind = ctrl+a=select_all
+# Copy / paste / select
+keybind = ctrl+shift+c=copy_to_clipboard
+keybind = ctrl+shift+v=paste_from_clipboard
+keybind = ctrl+shift+a=select_all
 
 # Tabs
-keybind = ctrl+t=new_tab
+keybind = ctrl+shift+t=new_tab
 keybind = ctrl+1=goto_tab:1
 keybind = ctrl+2=goto_tab:2
 keybind = ctrl+3=goto_tab:3
@@ -56,20 +57,20 @@ keybind = ctrl+8=goto_tab:8
 keybind = ctrl+9=goto_tab:9
 
 # Splits
-keybind = cmd+d=new_split:right
-keybind = cmd+shift+d=new_split:down
-keybind = cmd+shift+w=close_surface
+keybind = ctrl+shift+d=new_split:right
+keybind = ctrl+shift+e=new_split:down
+keybind = ctrl+shift+w=close_surface
 
 # Navigate splits
-keybind = cmd+alt+h=goto_split:left
-keybind = cmd+alt+j=goto_split:bottom
-keybind = cmd+alt+k=goto_split:top
-keybind = cmd+alt+l=goto_split:right
+keybind = ctrl+shift+h=goto_split:left
+keybind = ctrl+shift+j=goto_split:bottom
+keybind = ctrl+shift+k=goto_split:top
+keybind = ctrl+shift+l=goto_split:right
 
 # Font size
-keybind = cmd+equal=increase_font_size:1
-keybind = cmd+minus=decrease_font_size:1
-keybind = cmd+0=reset_font_size
+keybind = ctrl+shift+equal=increase_font_size:1
+keybind = ctrl+shift+minus=decrease_font_size:1
+keybind = ctrl+shift+0=reset_font_size
 
 # Fix shift+enter for REPLs
 keybind = shift+enter=text:\x1b\r
