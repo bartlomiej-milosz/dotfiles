@@ -1,7 +1,8 @@
 return {
-	-- ── Xcode: Apple's native, clean light + dark palettes ──
+	-- ── Zenbones: clean light + dark palettes (needs lush.nvim) ──
 	{
-		"lunacookies/vim-colors-xcode",
+		"zenbones-theme/zenbones.nvim",
+		dependencies = { "rktjmp/lush.nvim" },
 		lazy = false,
 		priority = 1000,
 	},
@@ -16,12 +17,12 @@ return {
 
 			set_dark_mode = function()
 				vim.o.background = "dark"
-				vim.cmd.colorscheme("xcodedark")
+				vim.cmd.colorscheme("zenbones")
 			end,
 
 			set_light_mode = function()
 				vim.o.background = "light"
-				vim.cmd.colorscheme("xcodelight")
+				vim.cmd.colorscheme("zenbones")
 			end,
 		},
 	},

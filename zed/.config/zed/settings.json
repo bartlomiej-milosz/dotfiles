@@ -14,10 +14,11 @@
 
   // ─── APPEARANCE ──────────────────────────────────────────────
   "theme": {
-    "mode": "dark",
-    "light": "macOS Classic Light",
-    "dark": "macOS Classic Dark",
+    "mode": "system",
+    "light": "Zenbones",
+    "dark": "Zenbones Dark",
   },
+  "buffer_font_family": "Iosevka Term Curly Slab",
   "icon_theme": {
     "mode": "dark",
     "light": "Zed (Default)",

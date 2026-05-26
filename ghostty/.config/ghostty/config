@@ -1,5 +1,5 @@
 # ── Font ─────────────────────────────────────────────────────
-font-family        = JetBrains Mono
+font-family        = Iosevka Term Curly Slab
 font-style         = Medium
 font-size          = 20
 font-thicken       = false
@@ -11,7 +11,7 @@ font-feature = -liga
 font-feature = -dlig
 
 # ── Theme ────────────────────────────────────────────────────
-theme = dark:Apple System Colors,light:Apple System Colors Light
+theme = dark:zenbones_dark,light:zenbones_light
 
 # ── Window ───────────────────────────────────────────────────
 window-padding-x       = 0
