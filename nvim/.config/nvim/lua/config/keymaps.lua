@@ -29,11 +29,11 @@ map("n", "<leader>wh", "<cmd>split<CR>", { desc = "Window split horizontal" })
 map("n", "<leader>we", "<C-w>=", { desc = "Window equalize sizes" })
 map("n", "<leader>wx", "<cmd>close<CR>", { desc = "Window close" })
 
--- Resize splits with arrow keys
-map("n", "<C-Up>", "<cmd>resize +2<CR>", { desc = "Increase window height" })
-map("n", "<C-Down>", "<cmd>resize -2<CR>", { desc = "Decrease window height" })
-map("n", "<C-Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease window width" })
-map("n", "<C-Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase window width" })
+-- Resize splits with <leader>w + arrow keys (Ctrl+arrows collide with macOS)
+map("n", "<leader>w<Up>", "<cmd>resize +2<CR>", { desc = "Increase window height" })
+map("n", "<leader>w<Down>", "<cmd>resize -2<CR>", { desc = "Decrease window height" })
+map("n", "<leader>w<Left>", "<cmd>vertical resize -2<CR>", { desc = "Decrease window width" })
+map("n", "<leader>w<Right>", "<cmd>vertical resize +2<CR>", { desc = "Increase window width" })
 
 -- ── Buffers ──────────────────────────────────────────────────
 
