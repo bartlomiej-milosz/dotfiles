@@ -49,9 +49,13 @@ cd ~/dotfiles
 
 It installs the formulae `git stow sheldon starship eza bat zoxide fzf fd ripgrep`,
 GNU userland (`coreutils gnu-sed grep gawk bash`), `neovim tree-sitter luacheck`,
-the runtimes `node go python`, and the casks `ghostty` + JetBrains Mono fonts.
+the runtimes `node go python`, and the `ghostty` cask.
 Neovim's LSPs / formatters / linters / debug adapters are installed by **mason**
 on first launch — this script only provides the runtimes mason builds them with.
+
+The terminal font — **Iosevka Term Curly Slab** — has no Homebrew cask and is
+installed by hand; `install.sh` prints a reminder with the download link. Use a
+Nerd Font build of the variant so `eza` / `starship` icons render.
 
 After it finishes: `exec zsh`, then open `nvim` once to let mason finish.
 
@@ -118,24 +122,24 @@ nvim/.config/nvim/
         ├── dap.lua         —  debugging (debugpy, delve)
         ├── mini.lua        —  mini.nvim modules + clue popup
         ├── noice.lua       —  command-palette cmdline + LSP UI
-        ├── theme.lua       —  Rose Pine colorscheme
+        ├── theme.lua       —  Zenbones colorscheme
         └── zen-mode.lua    —  distraction-free writing
 ```
 
-**Theme**: [vim-colors-xcode](https://github.com/lunacookies/vim-colors-xcode) — Apple's native Xcode palette, `xcodedark` (dark) / `xcodelight` (light).
-Switches between dark and light variants based on the macOS system appearance via [auto-dark-mode.nvim](https://github.com/f-person/auto-dark-mode.nvim). Ghostty uses the matching `Apple System Colors` theme so the terminal and editor share one clean, macOS-native look.
+**Theme**: [zenbones.nvim](https://github.com/zenbones-theme/zenbones.nvim) (needs [lush.nvim](https://github.com/rktjmp/lush.nvim)) — clean light + dark palettes.
+Switches between dark and light variants based on the system appearance via [auto-dark-mode.nvim](https://github.com/f-person/auto-dark-mode.nvim). Ghostty uses the matching `zenbones_dark` / `zenbones_light` theme so the terminal and editor share one look.
 
 External tooling (LSPs, formatters, linters, debug adapters) is installed by **mason** on first launch; see `scripts/install.sh` for the runtimes it needs.
 
 ### Ghostty (`ghostty/`)
 
-- **Font**: JetBrains Mono Medium, 20px, ligatures disabled
-- **Theme**: `dark:Apple System Colors, light:Apple System Colors Light` — follows macOS appearance
+- **Font**: Iosevka Term Curly Slab Medium, 20px, ligatures disabled
+- **Theme**: `dark:zenbones_dark, light:zenbones_light` — follows system appearance
 - **Window**: tabbed titlebar, zero padding (balanced), window shadow on
 - **Splits**: `cmd+d` right, `cmd+shift+d` down, `cmd+shift+w` close; navigate with `cmd+alt+hjkl`
 - **Tabs**: `ctrl+t` new tab, `ctrl+1-9` jump to tab
 
-A set of [zenbones](https://github.com/zenbones-theme/zenbones.nvim) colour themes is also bundled under `ghostty/.config/ghostty/themes/` as ready-to-use alternatives.
+The full set of [zenbones](https://github.com/zenbones-theme/zenbones.nvim) colour themes is bundled under `ghostty/.config/ghostty/themes/` as ready-to-use alternatives.
 
 ### IdeaVim (`ideavim/`)
 
@@ -166,11 +170,11 @@ Full Vim emulation for IntelliJ IDEA with `<Space>` as leader and [which-key](ht
 
 | File | Purpose |
 | :--- | :--- |
-| `settings.json` | Editor settings — vim mode, JetBrains base keymap, AI/telemetry off, panel layout, shfmt for shell |
+| `settings.json` | Editor settings — vim mode, JetBrains base keymap, Iosevka font, AI/telemetry off, panel layout, shfmt for shell |
 | `keymap.json` | `<Space>` leader bindings (find / code / search / git), `ctrl-j`/`ctrl-k` menu navigation |
 | `debug.json` | Debug task templates for Python and JavaScript |
 
-**Theme**: [macOS Classic](https://github.com/huacnlee/zed-theme-macos-classic) (light/dark) — install via Zed's extensions (`zed: extensions`); it isn't a dotfile.
+**Theme**: [Zenbones](https://github.com/zenbones-theme/zenbones.nvim) (light/dark, follows system appearance) — install via Zed's extensions (`zed: extensions`); it isn't a dotfile.
 
 > Only the text config files are managed. Zed's `prompts/` (binary DB) and installed `extensions/` are intentionally left out.
 

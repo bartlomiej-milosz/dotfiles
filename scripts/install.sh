@@ -45,14 +45,19 @@ FORMULAE=(
   node go python
 )
 
-# ── Casks (GUI / fonts) ──────────────────────────────────────
+# ── Casks (GUI) ──────────────────────────────────────────────
 CASKS=(
   ghostty
-  font-jetbrains-mono           # exact family referenced in ghostty/config
-  font-jetbrains-mono-nerd-font # glyph fallback for eza / starship icons
 )
 # Optional (IdeaVim host — not stowed by sync.sh, install only if you use it):
 #   brew install --cask intellij-idea
+
+# ── Fonts (manual) ───────────────────────────────────────────
+# The terminal font (ghostty + zed) is "Iosevka Term Curly Slab", which has no
+# Homebrew cask — install it by hand. For eza / starship icons to render you
+# need a Nerd Font build of that variant (the base release has no icon glyphs).
+FONT_FAMILY="Iosevka Term Curly Slab"
+FONT_URL="https://github.com/be5invis/Iosevka/releases"
 
 # ── 1. Homebrew ──────────────────────────────────────────────
 step "Homebrew"
@@ -98,6 +103,13 @@ done
 # ── 4. Link dotfiles ─────────────────────────────────────────
 step "Linking dotfiles"
 "$DOTFILES_DIR/scripts/sync.sh"
+
+# ── Fonts (manual reminder) ──────────────────────────────────
+step "Fonts (manual)"
+log_warn "Install the terminal font by hand — it's not in Homebrew:"
+echo "    Family : $FONT_FAMILY"
+echo "    Source : $FONT_URL"
+echo "    Use a Nerd Font build of this variant, or eza / starship icons won't render."
 
 # ── Done ─────────────────────────────────────────────────────
 step "Done"
