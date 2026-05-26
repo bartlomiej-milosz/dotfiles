@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 # ============================================================
-# scripts/install.sh
+# scripts/install-macos.sh
 # One-shot bootstrap for a fresh macOS machine:
 #   1. install Homebrew (if missing)
 #   2. install every CLI tool + GUI cask the dotfiles depend on
 #   3. link the dotfiles via scripts/sync.sh
-# Usage: ./scripts/install.sh
+# Usage: ./scripts/install-macos.sh
+# (Arch Linux: use ./scripts/install-arch.sh instead.)
 #
 # Idempotent: safe to re-run; already-installed packages are skipped.
 #

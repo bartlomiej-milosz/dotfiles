@@ -1,7 +1,7 @@
 # dotfiles
 
-A terminal-centric macOS setup managed with [GNU Stow](https://www.gnu.org/software/stow/).
-Built around full control over the environment — native binaries, minimal dependencies, and configs that compose cleanly.
+A terminal-centric setup for **macOS and Arch Linux** managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Built around full control over the environment — native binaries, minimal dependencies, and configs that compose cleanly. One set of configs drives both machines; the per-OS differences live entirely in the bootstrap scripts.
 
 ## Stack
 
@@ -33,28 +33,37 @@ dotfiles/
 
 ## Quick start
 
-On a fresh macOS machine, clone and run the bootstrap script:
+Clone, then run the bootstrap script for your OS:
 
 ```bash
 git clone git@github.com:bartlomiej-milosz/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./scripts/install.sh
+
+./scripts/install-macos.sh   # macOS  (Homebrew)
+./scripts/install-arch.sh    # Arch Linux (pacman)
 ```
 
-`install.sh` is idempotent and does everything end to end:
+Both scripts are idempotent and do everything end to end:
 
-1. installs Homebrew if it's missing,
-2. installs every CLI tool and GUI cask the dotfiles depend on,
-3. links all packages via `scripts/sync.sh` (`stow --restow`).
+1. install every CLI tool the dotfiles depend on,
+2. link all packages via `scripts/sync.sh` (`stow --restow`).
 
-It installs the formulae `git stow sheldon starship eza bat zoxide fzf fd ripgrep`,
-GNU userland (`coreutils gnu-sed grep gawk bash`), `neovim tree-sitter luacheck`,
-the runtimes `node go python`, and the `ghostty` cask.
+**macOS** (`install-macos.sh`) installs Homebrew if missing, then the formulae
+`git stow sheldon starship eza bat zoxide fzf fd ripgrep`, GNU userland
+(`coreutils gnu-sed grep gawk bash`), `neovim tree-sitter luacheck`, the runtimes
+`node go python`, and the `ghostty` cask.
+
+**Arch** (`install-arch.sh`) installs everything from the official repos with
+pacman — no AUR needed: `git stow sheldon starship eza bat zoxide fzf fd ripgrep
+neovim tree-sitter-cli luacheck nodejs npm go python python-pip unzip wl-clipboard
+ghostty`. No GNU userland (Arch ships it natively), plus `wl-clipboard` for the
+nvim system clipboard and a generated `en_US.UTF-8` locale.
+
 Neovim's LSPs / formatters / linters / debug adapters are installed by **mason**
-on first launch — this script only provides the runtimes mason builds them with.
+on first launch — the scripts only provide the runtimes mason builds them with.
 
-The terminal font — **Iosevka Term Curly Slab** — has no Homebrew cask and is
-installed by hand; `install.sh` prints a reminder with the download link. Use a
+The terminal font — **Iosevka Term Curly Slab** — has no package on either OS and
+is installed by hand; each script prints a reminder with the download link. Use a
 Nerd Font build of the variant so `eza` / `starship` icons render.
 
 After it finishes: `exec zsh`, then open `nvim` once to let mason finish.
@@ -129,15 +138,17 @@ nvim/.config/nvim/
 **Theme**: [zenbones.nvim](https://github.com/zenbones-theme/zenbones.nvim) (needs [lush.nvim](https://github.com/rktjmp/lush.nvim)) — clean light + dark palettes.
 Switches between dark and light variants based on the system appearance via [auto-dark-mode.nvim](https://github.com/f-person/auto-dark-mode.nvim). Ghostty uses the matching `zenbones_dark` / `zenbones_light` theme so the terminal and editor share one look.
 
-External tooling (LSPs, formatters, linters, debug adapters) is installed by **mason** on first launch; see `scripts/install.sh` for the runtimes it needs.
+External tooling (LSPs, formatters, linters, debug adapters) is installed by **mason** on first launch; see the install scripts for the runtimes it needs.
 
 ### Ghostty (`ghostty/`)
 
 - **Font**: Iosevka Term Curly Slab Medium, 20px, ligatures disabled
 - **Theme**: `dark:zenbones_dark, light:zenbones_light` — follows system appearance
 - **Window**: tabbed titlebar, zero padding (balanced), window shadow on
-- **Splits**: `cmd+d` right, `cmd+shift+d` down, `cmd+shift+w` close; navigate with `cmd+alt+hjkl`
-- **Tabs**: `ctrl+t` new tab, `ctrl+1-9` jump to tab
+- **Keybinds**: unified on `ctrl+shift` so they're identical on macOS and Linux (`cmd` aliases to Super on Linux and collides with GNOME)
+- **Clipboard**: `ctrl+shift+c` copy, `ctrl+shift+v` paste, `ctrl+shift+a` select all
+- **Splits**: `ctrl+shift+d` right, `ctrl+shift+e` down, `ctrl+shift+w` close; navigate with `ctrl+shift+hjkl`
+- **Tabs**: `ctrl+shift+t` new tab, `ctrl+1-9` jump to tab
 
 The full set of [zenbones](https://github.com/zenbones-theme/zenbones.nvim) colour themes is bundled under `ghostty/.config/ghostty/themes/` as ready-to-use alternatives.
 
@@ -182,7 +193,8 @@ Full Vim emulation for IntelliJ IDEA with `<Space>` as leader and [which-key](ht
 
 | Script | Usage | Description |
 | :--- | :--- | :--- |
-| `scripts/install.sh` | `./scripts/install.sh` | Full bootstrap: Homebrew + all packages/casks + stow |
+| `scripts/install-macos.sh` | `./scripts/install-macos.sh` | macOS bootstrap: Homebrew + all packages/cask + stow |
+| `scripts/install-arch.sh` | `./scripts/install-arch.sh` | Arch bootstrap: pacman packages + locale + stow |
 | `scripts/sync.sh` | `./scripts/sync.sh` | Stow (or re-stow) all packages |
 | `scripts/purge.sh` | `./scripts/purge.sh` | Unstow all packages and remove runtime caches |
 | `scripts/purge.sh <pkg>` | `./scripts/purge.sh nvim` | Unstow a single package |
