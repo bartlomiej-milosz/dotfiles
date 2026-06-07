@@ -92,14 +92,14 @@ step "Linking dotfiles"
 "$DOTFILES_DIR/scripts/sync.sh"
 
 # ── 5. Fonts (manual reminder) ───────────────────────────────
-# Same font as macOS; install it by hand into ~/.local/share/fonts (or use a
-# pacman package if one matches). For eza / starship icons you need a Nerd Font
-# build of the variant — the base release has no icon glyphs.
+# Same font as macOS; install it by hand into ~/.local/share/fonts. For
+# eza / starship icons you need a Nerd Font build — the base release has no
+# icon glyphs.
 step "Fonts (manual)"
 log_warn "Install the terminal font by hand:"
-echo "    Family : Iosevka Term Curly Slab"
-echo "    Source : https://github.com/be5invis/Iosevka/releases"
-echo "    Drop the .ttc files into ~/.local/share/fonts, then run: fc-cache -f"
+echo "    Family : Commit Mono"
+echo "    Source : https://commitmono.com (or Nerd Fonts: https://github.com/ryanoasis/nerd-fonts/releases)"
+echo "    Drop the .ttf files into ~/.local/share/fonts, then run: fc-cache -f"
 echo "    Use a Nerd Font build of this variant, or eza / starship icons won't render."
 
 # ── Done ─────────────────────────────────────────────────────

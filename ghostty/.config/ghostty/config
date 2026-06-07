@@ -1,9 +1,6 @@
 # ── Font ─────────────────────────────────────────────────────
-font-family        = Iosevka Term Curly Slab
-font-style         = Medium
-font-size          = 20
-font-thicken       = false
-adjust-cell-height = 15%
+font-family = CommitMono Nerd Font Mono
+font-size   = 20
 
 # Disable ligatures
 font-feature = -calt
@@ -11,13 +8,15 @@ font-feature = -liga
 font-feature = -dlig
 
 # ── Theme ────────────────────────────────────────────────────
-theme = dark:zenbones_dark,light:zenbones_light
+theme = dark:tokyonight-storm,light:tokyonight-day
 
 # ── Window ───────────────────────────────────────────────────
 window-padding-x       = 0
 window-padding-y       = 0
 window-padding-balance = true
-macos-titlebar-style   = tabs
+# `transparent` — bg theme rozciąga się przez titlebar/tabs, więc
+# nie ma widocznej krawędzi między chrome ghostty a bg nvima/tłem.
+macos-titlebar-style   = transparent
 
 # ── Cursor ───────────────────────────────────────────────────
 cursor-style       = bar

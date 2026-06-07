@@ -10,7 +10,7 @@ Built around full control over the environment — native binaries, minimal depe
 | Shell | [Zsh](https://www.zsh.org/) + [Sheldon](https://sheldon.cli.rs/) (plugin manager) |
 | Prompt | [Starship](https://starship.rs/) |
 | Terminal | [Ghostty](https://ghostty.org/) |
-| Editor | [Neovim](https://neovim.io/) (custom [lazy.nvim](https://github.com/folke/lazy.nvim) config) · [Zed](https://zed.dev/) · [IdeaVim](https://github.com/JetBrains/ideavim) |
+| Editor | [Neovim](https://neovim.io/) + [LazyVim](https://www.lazyvim.org/) · [IdeaVim](https://github.com/JetBrains/ideavim) |
 | Dotfile manager | [GNU Stow](https://www.gnu.org/software/stow/) |
 | CLI replacements | `eza` · `bat` · `zoxide` · `fzf` · `fd` |
 
@@ -26,7 +26,6 @@ dotfiles/
 ├── nvim/           →  ~/.config/nvim/
 ├── sheldon/        →  ~/.config/sheldon/
 ├── starship/       →  ~/.config/starship.toml
-├── zed/            →  ~/.config/zed/
 ├── zsh/            →  ~/.zshrc
 └── scripts/        —  utility scripts (not stowed)
 ```
@@ -62,9 +61,9 @@ nvim system clipboard and a generated `en_US.UTF-8` locale.
 Neovim's LSPs / formatters / linters / debug adapters are installed by **mason**
 on first launch — the scripts only provide the runtimes mason builds them with.
 
-The terminal font — **Iosevka Term Curly Slab** — has no package on either OS and
-is installed by hand; each script prints a reminder with the download link. Use a
-Nerd Font build of the variant so `eza` / `starship` icons render.
+The terminal font — **Commit Mono** — ships as a Homebrew cask on macOS
+(`font-commit-mono-nerd-font`); on Arch the install script prints a reminder
+to grab it by hand. Use a Nerd Font build so `eza` / `starship` icons render.
 
 After it finishes: `exec zsh`, then open `nvim` once to let mason finish.
 
@@ -111,46 +110,39 @@ Minimal two-line prompt showing: directory → git branch + status → Python / 
 
 ### Neovim (`nvim/`)
 
-A lean custom configuration on `lazy.nvim`:
+[LazyVim](https://www.lazyvim.org/) starter on top of `lazy.nvim` — the upstream
+distro handles LSP, completion, formatting, linting, treesitter, mini.* and the
+rest of the editor experience:
 
 ```
 nvim/.config/nvim/
 ├── init.lua                —  entry point
 └── lua/
     ├── config/
-    │   ├── options.lua     —  editor options
-    │   ├── keymaps.lua     —  custom key bindings
-    │   ├── autocmds.lua    —  auto commands
-    │   └── lazy.lua        —  lazy.nvim bootstrap
-    └── plugins/
-        ├── lsp.lua         —  mason + lspconfig (basedpyright, gopls, bashls, marksman, lua_ls)
-        ├── completion.lua  —  blink.cmp completion
-        ├── format.lua      —  conform.nvim (stylua, shfmt, gofumpt, prettierd)
-        ├── lint.lua        —  nvim-lint (luacheck)
-        ├── treesitter.lua  —  syntax / parsers
-        ├── dap.lua         —  debugging (debugpy, delve)
-        ├── mini.lua        —  mini.nvim modules + clue popup
-        ├── noice.lua       —  command-palette cmdline + LSP UI
-        ├── theme.lua       —  Zenbones colorscheme
-        └── zen-mode.lua    —  distraction-free writing
+    │   ├── options.lua     —  options overrides (empty by default)
+    │   ├── keymaps.lua     —  keymap overrides  (empty by default)
+    │   ├── autocmds.lua    —  autocmd overrides (empty by default)
+    │   └── lazy.lua        —  lazy.nvim + LazyVim bootstrap
+    └── plugins/            —  custom plugin specs / LazyVim overrides
 ```
 
-**Theme**: [zenbones.nvim](https://github.com/zenbones-theme/zenbones.nvim) (needs [lush.nvim](https://github.com/rktjmp/lush.nvim)) — clean light + dark palettes.
-Switches between dark and light variants based on the system appearance via [auto-dark-mode.nvim](https://github.com/f-person/auto-dark-mode.nvim). Ghostty uses the matching `zenbones_dark` / `zenbones_light` theme so the terminal and editor share one look.
+**Theme**: [tokyonight.nvim](https://github.com/folke/tokyonight.nvim) — ships
+with LazyVim, `storm` for dark and `day` for light. Ghostty uses the matching
+built-in `tokyonight-storm` / `tokyonight-day` so the terminal and editor share
+one look.
 
-External tooling (LSPs, formatters, linters, debug adapters) is installed by **mason** on first launch; see the install scripts for the runtimes it needs.
+External tooling (LSPs, formatters, linters, debug adapters) is installed by
+**mason** on first launch; see the install scripts for the runtimes it needs.
 
 ### Ghostty (`ghostty/`)
 
-- **Font**: Iosevka Term Curly Slab Medium, 20px, ligatures disabled
-- **Theme**: `dark:zenbones_dark, light:zenbones_light` — follows system appearance
-- **Window**: tabbed titlebar, zero padding (balanced), window shadow on
+- **Font**: Commit Mono, 20px, ligatures disabled
+- **Theme**: `dark:tokyonight-storm, light:tokyonight-day` — follows system appearance (both built into ghostty)
+- **Window**: transparent titlebar (theme bg bleeds through), zero padding (balanced), window shadow on
 - **Keybinds**: unified on `ctrl+shift` so they're identical on macOS and Linux (`cmd` aliases to Super on Linux and collides with GNOME)
 - **Clipboard**: `ctrl+shift+c` copy, `ctrl+shift+v` paste, `ctrl+shift+a` select all
 - **Splits**: `ctrl+shift+d` right, `ctrl+shift+e` down, `ctrl+shift+w` close; navigate with `ctrl+shift+hjkl`
 - **Tabs**: `ctrl+shift+t` new tab, `ctrl+1-9` jump to tab
-
-The full set of [zenbones](https://github.com/zenbones-theme/zenbones.nvim) colour themes is bundled under `ghostty/.config/ghostty/themes/` as ready-to-use alternatives.
 
 ### IdeaVim (`ideavim/`)
 
@@ -174,20 +166,6 @@ Full Vim emulation for IntelliJ IDEA with `<Space>` as leader and [which-key](ht
 > ```bash
 > stow --dir=~/dotfiles --target="$HOME" ideavim
 > ```
-
-### Zed (`zed/`)
-
-[Zed](https://zed.dev/) configuration linked into `~/.config/zed/`:
-
-| File | Purpose |
-| :--- | :--- |
-| `settings.json` | Editor settings — vim mode, JetBrains base keymap, Iosevka font, AI/telemetry off, panel layout, shfmt for shell |
-| `keymap.json` | `<Space>` leader bindings (find / code / search / git), `ctrl-j`/`ctrl-k` menu navigation |
-| `debug.json` | Debug task templates for Python and JavaScript |
-
-**Theme**: [Zenbones](https://github.com/zenbones-theme/zenbones.nvim) (light/dark, follows system appearance) — install via Zed's extensions (`zed: extensions`); it isn't a dotfile.
-
-> Only the text config files are managed. Zed's `prompts/` (binary DB) and installed `extensions/` are intentionally left out.
 
 ## Scripts
 
