@@ -47,9 +47,9 @@ FORMULAE=(
 )
 
 # ── Casks (GUI) ──────────────────────────────────────────────
+# Note: TX-02 (US Graphics) is paid and not on Homebrew — install it by hand.
 CASKS=(
   ghostty
-  font-commit-mono-nerd-font
 )
 # Optional (IdeaVim host — not stowed by sync.sh, install only if you use it):
 #   brew install --cask intellij-idea
@@ -98,6 +98,14 @@ done
 # ── 4. Link dotfiles ─────────────────────────────────────────
 step "Linking dotfiles"
 "$DOTFILES_DIR/scripts/sync.sh"
+
+# ── 5. Fonts (manual reminder) ───────────────────────────────
+step "Fonts (manual)"
+log_warn "Install the terminal font by hand:"
+echo "    Family : TX-02"
+echo "    Source : https://usgraphics.com/products/tx-02 (paid)"
+echo "    Drop the .ttf / .otf files into ~/Library/Fonts."
+echo "    For eza / starship icons, also install a Nerd Font as fallback."
 
 # ── Done ─────────────────────────────────────────────────────
 step "Done"

@@ -1,5 +1,5 @@
 # ── Font ─────────────────────────────────────────────────────
-font-family = CommitMono Nerd Font Mono
+font-family = TX-02
 font-size   = 20
 
 # Disable ligatures
@@ -8,7 +8,7 @@ font-feature = -liga
 font-feature = -dlig
 
 # ── Theme ────────────────────────────────────────────────────
-theme = dark:tokyonight-storm,light:tokyonight-day
+theme = dark:github-dark,light:github-light
 
 # ── Window ───────────────────────────────────────────────────
 window-padding-x       = 0

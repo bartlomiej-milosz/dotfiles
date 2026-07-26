@@ -61,9 +61,10 @@ nvim system clipboard and a generated `en_US.UTF-8` locale.
 Neovim's LSPs / formatters / linters / debug adapters are installed by **mason**
 on first launch — the scripts only provide the runtimes mason builds them with.
 
-The terminal font — **Commit Mono** — ships as a Homebrew cask on macOS
-(`font-commit-mono-nerd-font`); on Arch the install script prints a reminder
-to grab it by hand. Use a Nerd Font build so `eza` / `starship` icons render.
+The terminal font — **TX-02** (US Graphics) — is a paid font and must be
+installed by hand on both macOS and Arch. The install scripts print a
+reminder. If you want `eza` / `starship` icons, pair it with a Nerd Font
+fallback or patch TX-02 yourself.
 
 After it finishes: `exec zsh`, then open `nvim` once to let mason finish.
 
@@ -126,18 +127,19 @@ nvim/.config/nvim/
     └── plugins/            —  custom plugin specs / LazyVim overrides
 ```
 
-**Theme**: [tokyonight.nvim](https://github.com/folke/tokyonight.nvim) — ships
-with LazyVim, `storm` for dark and `day` for light. Ghostty uses the matching
-built-in `tokyonight-storm` / `tokyonight-day` so the terminal and editor share
-one look.
+**Theme**: [github-nvim-theme](https://github.com/projekt0n/github-nvim-theme)
+— `github_dark` / `github_light`, switched automatically by
+`auto-dark-mode.nvim` based on the system appearance. Ghostty uses the
+matching built-in `github-dark` / `github-light` so the terminal and editor
+share one palette.
 
 External tooling (LSPs, formatters, linters, debug adapters) is installed by
 **mason** on first launch; see the install scripts for the runtimes it needs.
 
 ### Ghostty (`ghostty/`)
 
-- **Font**: Commit Mono, 20px, ligatures disabled
-- **Theme**: `dark:tokyonight-storm, light:tokyonight-day` — follows system appearance (both built into ghostty)
+- **Font**: TX-02, 20px, ligatures disabled
+- **Theme**: `dark:github-dark, light:github-light` — follows system appearance (both built into ghostty)
 - **Window**: transparent titlebar (theme bg bleeds through), zero padding (balanced), window shadow on
 - **Keybinds**: unified on `ctrl+shift` so they're identical on macOS and Linux (`cmd` aliases to Super on Linux and collides with GNOME)
 - **Clipboard**: `ctrl+shift+c` copy, `ctrl+shift+v` paste, `ctrl+shift+a` select all

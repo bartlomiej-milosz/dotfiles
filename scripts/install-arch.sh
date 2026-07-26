@@ -97,10 +97,10 @@ step "Linking dotfiles"
 # icon glyphs.
 step "Fonts (manual)"
 log_warn "Install the terminal font by hand:"
-echo "    Family : Commit Mono"
-echo "    Source : https://commitmono.com (or Nerd Fonts: https://github.com/ryanoasis/nerd-fonts/releases)"
-echo "    Drop the .ttf files into ~/.local/share/fonts, then run: fc-cache -f"
-echo "    Use a Nerd Font build of this variant, or eza / starship icons won't render."
+echo "    Family : TX-02"
+echo "    Source : https://usgraphics.com/products/tx-02 (paid)"
+echo "    Drop the .ttf / .otf files into ~/.local/share/fonts, then run: fc-cache -f"
+echo "    For eza / starship icons, also install a Nerd Font as fallback."
 
 # ── Done ─────────────────────────────────────────────────────
 step "Done"

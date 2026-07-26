@@ -122,5 +122,15 @@ alias gl='git log --oneline --graph --decorate'
 alias py='python3'
 alias pip='pip3'
 
+# ── SDKMAN ───────────────────────────────────────────────────
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
+
 # ── Starship prompt ──────────────────────────────────────────
 eval "$(starship init zsh)"
+
+# Added by Antigravity IDE
+export PATH="/Users/bartek/.antigravity-ide/antigravity-ide/bin:$PATH"
+
+# Added by Antigravity IDE
+export PATH="/Users/bartek/.antigravity-ide/antigravity-ide/bin:$PATH"
