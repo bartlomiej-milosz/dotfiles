@@ -1,3 +1,4 @@
+# shellcheck disable=SC1091,SC2034,SC2154,SC2206
 # Keep the shell usable even before optional tools have been installed.
 [[ -o interactive ]] || return
 
