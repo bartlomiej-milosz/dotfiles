@@ -5,63 +5,21 @@
 [init]
 	defaultBranch = main
 
-[core]
-	editor = nvim
-	pager = less -FRX
-
-[column]
-	ui = auto
-
-[branch]
-	sort = -committerdate
-
-[tag]
-	sort = version:refname
-
 [push]
-	default = simple
 	autoSetupRemote = true
-	followTags = true
 
 [pull]
-	rebase = true
+	ff = only
 
 [fetch]
 	prune = true
-	pruneTags = true
-	all = true
-
-[rebase]
-	autoSquash = true
-	autoStash = true
-	updateRefs = true
 
 [merge]
 	conflictStyle = zdiff3
 
-[rerere]
-	enabled = true
-	autoUpdate = true
-
 [diff]
 	algorithm = histogram
-	colorMoved = plain
-	mnemonicPrefix = true
-	renames = true
 
-[commit]
-	verbose = true
-
-[help]
-	autocorrect = prompt
-
-[color]
-	ui = auto
-
-[alias]
-	# Kept short and non-overlapping with the zsh g/gs/ga/gc/gp/gl aliases.
-	st = status -sb
-	last = log -1 HEAD --stat
-	unstage = restore --staged
-	amend = commit --amend --no-edit
-	graph = log --oneline --graph --decorate --all
+# Optional settings for this machine (for example core.editor).
+[include]
+	path = ~/.gitconfig.local

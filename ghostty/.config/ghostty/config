@@ -1,5 +1,5 @@
 # ── Font ─────────────────────────────────────────────────────
-font-family = TX-02
+font-family = JetBrains Mono
 font-size   = 20
 
 # Disable ligatures
@@ -11,11 +11,10 @@ font-feature = -dlig
 theme = dark:github-dark,light:github-light
 
 # ── Window ───────────────────────────────────────────────────
-window-padding-x       = 0
-window-padding-y       = 0
+window-padding-x       = 12
+window-padding-y       = 10
 window-padding-balance = true
-# `transparent` — bg theme rozciąga się przez titlebar/tabs, więc
-# nie ma widocznej krawędzi między chrome ghostty a bg nvima/tłem.
+# Extend the theme background into the titlebar; keep the window opaque.
 macos-titlebar-style   = transparent
 
 # ── Cursor ───────────────────────────────────────────────────
@@ -23,7 +22,8 @@ cursor-style       = bar
 cursor-style-blink = true
 
 # ── Scrollback ───────────────────────────────────────────────
-scrollback-limit = 10000
+# Bytes (16 MiB), not a line count.
+scrollback-limit = 16777216
 
 # ── Shell integration ────────────────────────────────────────
 shell-integration          = zsh

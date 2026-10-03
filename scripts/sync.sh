@@ -1,64 +1,33 @@
 #!/usr/bin/env bash
-# ============================================================
-# scripts/sync.sh
-# Link all dotfile packages via GNU Stow.
-# Run after cloning or after any change in dotfiles.
-# Usage: ./scripts/sync.sh
-# ============================================================
-
+# Usage: ./scripts/sync.sh [--desktop|--cli] [--dry-run]
 set -euo pipefail
-
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TARGET_DIR="$HOME"
-
-PACKAGES=(
-  ghostty
-  git
-  nvim
-  sheldon
-  starship
-  zsh
-)
-
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-NC='\033[0m'
-
-log_ok() { echo -e "${GREEN}✓${NC}  $1"; }
-log_warn() { echo -e "${YELLOW}!${NC}  $1"; }
-log_err() { echo -e "${RED}✗${NC}  $1"; }
-
-if ! command -v stow &>/dev/null; then
-  log_err "stow not found — install with: brew install stow"
-  exit 1
-fi
-
-echo ""
-echo "Dotfiles : $DOTFILES_DIR"
-echo "Target   : $TARGET_DIR"
-echo ""
-
-for pkg in "${PACKAGES[@]}"; do
-  pkg_path="$DOTFILES_DIR/$pkg"
-
-  if [[ ! -d "$pkg_path" ]]; then
-    log_warn "$pkg — directory not found, skipping"
-    continue
-  fi
-
-  if stow --dir="$DOTFILES_DIR" --target="$TARGET_DIR" --restow "$pkg" 2>/dev/null; then
-    log_ok "$pkg"
-  else
-    log_warn "$pkg — conflict, attempting adopt + restow"
-    if stow --dir="$DOTFILES_DIR" --target="$TARGET_DIR" --adopt "$pkg" &&
-      stow --dir="$DOTFILES_DIR" --target="$TARGET_DIR" --restow "$pkg" 2>/dev/null; then
-      log_ok "$pkg (adopted)"
-    else
-      log_err "$pkg — failed, resolve manually"
-    fi
-  fi
+MODE=cli
+[[ $(uname -s) == Darwin ]] && MODE=desktop
+DRY_RUN=false
+for arg in "$@"; do
+  case "$arg" in
+  --desktop) MODE=desktop ;;
+  --cli) MODE=cli ;;
+  --dry-run) DRY_RUN=true ;;
+  *)
+    printf 'Unknown option: %s\n' "$arg" >&2
+    exit 1
+    ;;
+  esac
 done
+command -v stow >/dev/null || {
+  echo 'Install GNU Stow first (brew install stow / sudo apt install stow).' >&2
+  exit 1
+}
+PACKAGES=(git sheldon starship zsh)
+[[ $MODE == desktop ]] && PACKAGES+=(ghostty)
 
-echo ""
-echo "Done. Reload shell: source ~/.zshrc"
+# Check every package before changing any links. Never adopt or overwrite files.
+stow --no-folding --ignore='\.DS_Store$' --ignore='\.swp$' --dir="$DOTFILES_DIR" --target="$HOME" --simulate --restow "${PACKAGES[@]}"
+if [[ $DRY_RUN == true ]]; then
+  echo 'Dry run complete; no links changed.'
+else
+  stow --no-folding --ignore='\.DS_Store$' --ignore='\.swp$' --dir="$DOTFILES_DIR" --target="$HOME" --restow "${PACKAGES[@]}"
+  echo 'Dotfiles linked. Open a new terminal or run: exec zsh'
+fi

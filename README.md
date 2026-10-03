@@ -1,199 +1,185 @@
 # dotfiles
 
-A terminal-centric setup for **macOS and Arch Linux** managed with [GNU Stow](https://www.gnu.org/software/stow/).
-Built around full control over the environment — native binaries, minimal dependencies, and configs that compose cleanly. One set of configs drives both machines; the per-OS differences live entirely in the bootstrap scripts.
+A small, shared terminal setup for **macOS and Ubuntu 24.04 / 26.04 LTS**
+(64-bit amd64 / arm64), managed with GNU Stow.
 
-## Stack
+- **Ghostty** with JetBrains Mono, GitHub Light/Dark following system appearance,
+  an opaque background, and a little space around the text.
+- **Zsh**, **Starship**, and **fzf** for everyday shell use.
+- Two plugins managed by **Sheldon**: history suggestions and syntax highlighting.
+- Standard `ls`, `cat`, `cd`, and other system commands. No icon font required.
+- An independent **IdeaVim** config, kept as-is and installed separately.
 
-| Layer | Tool |
-| :--- | :--- |
-| Shell | [Zsh](https://www.zsh.org/) + [Sheldon](https://sheldon.cli.rs/) (plugin manager) |
-| Prompt | [Starship](https://starship.rs/) |
-| Terminal | [Ghostty](https://ghostty.org/) |
-| Editor | [Neovim](https://neovim.io/) + [LazyVim](https://www.lazyvim.org/) · [IdeaVim](https://github.com/JetBrains/ideavim) |
-| Dotfile manager | [GNU Stow](https://www.gnu.org/software/stow/) |
-| CLI replacements | `eza` · `bat` · `zoxide` · `fzf` · `fd` |
+## Install
 
-## Repository structure
+Clone the repository and run the installer as your regular user:
 
-Each top-level directory is a Stow package that mirrors the target home directory structure:
-
-```
-dotfiles/
-├── ghostty/        →  ~/.config/ghostty/
-├── git/            →  ~/.gitconfig
-├── ideavim/        →  ~/.ideavimrc
-├── nvim/           →  ~/.config/nvim/
-├── sheldon/        →  ~/.config/sheldon/
-├── starship/       →  ~/.config/starship.toml
-├── zsh/            →  ~/.zshrc
-└── scripts/        —  utility scripts (not stowed)
-```
-
-## Quick start
-
-Clone, then run the bootstrap script for your OS:
-
-```bash
+```sh
 git clone git@github.com:bartlomiej-milosz/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 
-./scripts/install-macos.sh   # macOS  (Homebrew)
-./scripts/install-arch.sh    # Arch Linux (pacman)
+# macOS: shell tools, Ghostty, and JetBrains Mono via Homebrew
+./scripts/install-macos.sh
+
+# Ubuntu VM / SSH machine: shell tools only
+./scripts/install-ubuntu.sh
+
+# Ubuntu desktop: also install Ghostty and JetBrains Mono
+./scripts/install-ubuntu.sh --desktop
 ```
 
-Both scripts are idempotent and do everything end to end:
+| System | Default profile | Desktop packages |
+| --- | --- | --- |
+| macOS | `--desktop` | Ghostty and JetBrains Mono via Homebrew |
+| Ubuntu 24.04 LTS | `--cli` | Ghostty via Snap; JetBrains Mono via apt |
+| Ubuntu 26.04 LTS | `--cli` | Ghostty and JetBrains Mono via apt |
 
-1. install every CLI tool the dotfiles depend on,
-2. link all packages via `scripts/sync.sh` (`stow --restow`).
+Both installers accept `--cli` and `--desktop`. Ubuntu defaults to `--cli`,
+regardless of whether a desktop is detected.
+The installers do not install language runtimes or development environments.
+They stop on errors and can be rerun; existing applications are not uninstalled.
 
-**macOS** (`install-macos.sh`) installs Homebrew if missing, then the formulae
-`git stow sheldon starship eza bat zoxide fzf fd ripgrep`, GNU userland
-(`coreutils gnu-sed grep gawk bash`), `neovim tree-sitter luacheck`, the runtimes
-`node go python`, and the `ghostty` cask.
+On Ubuntu, enable the standard **universe** repository if your minimal image
+omits it. Most tools come from apt. On 24.04, Starship is installed using its
+upstream installer into `~/.local/bin`; on 26.04 it comes from apt. Sheldon uses
+its upstream binary installer into `~/.local/bin` when not already installed.
+For the desktop profile, Ghostty comes from apt on 26.04 and the Snap package
+(with classic confinement) on 24.04. JetBrains Mono comes from apt.
+No Rust toolchain or Linux Homebrew installation is needed.
 
-**Arch** (`install-arch.sh`) installs everything from the official repos with
-pacman — no AUR needed: `git stow sheldon starship eza bat zoxide fzf fd ripgrep
-neovim tree-sitter-cli luacheck nodejs npm go python python-pip unzip wl-clipboard
-ghostty`. No GNU userland (Arch ships it natively), plus `wl-clipboard` for the
-nvim system clipboard and a generated `en_US.UTF-8` locale.
+Sources: [Starship installation](https://starship.rs/guide/),
+[Sheldon installation](https://sheldon.cli.rs/Installation.html),
+[Ghostty packages](https://ghostty.org/docs/install/binary).
 
-Neovim's LSPs / formatters / linters / debug adapters are installed by **mason**
-on first launch — the scripts only provide the runtimes mason builds them with.
+Open a new terminal after installation. On Ubuntu, start `zsh`; optionally make
+it your login shell with `chsh -s /usr/bin/zsh`, then log out and back in.
+An SSH host needs only the CLI profile: the font and window theme belong to
+the computer running the terminal application.
 
-The terminal font — **TX-02** (US Graphics) — is a paid font and must be
-installed by hand on both macOS and Arch. The install scripts print a
-reminder. If you want `eza` / `starship` icons, pair it with a Nerd Font
-fallback or patch TX-02 yourself.
+## Appearance
 
-After it finishes: `exec zsh`, then open `nvim` once to let mason finish.
+Ghostty uses the regular **JetBrains Mono** family, 20 pt, with ligatures disabled.
+The two-line prompt uses the terminal's palette so it follows the light/dark theme.
+It displays the directory, Git branch and changes, an activated Python environment,
+and duration for commands taking at least two seconds. SSH sessions also show the
+hostname. There are no language-version badges or decorative icons.
 
-## Packages
-
-### Zsh (`zsh/`)
-
-- Effectively unlimited history (1M lines) shared across sessions with deduplication and timestamps
-- Tab completion with case-insensitive matching and colored output
-- `AUTO_CD`, `AUTO_PUSHD`, `CORRECT` enabled
-- GNU coreutils on macOS (consistent `ls`, `sed`, `grep` behaviour across platforms)
-- Conditional aliases: `ls`/`ll`/`la`/`lt` → `eza`, `cat` → `bat`, `cd` → `zoxide`
-- Git shorthand: `g`, `gs`, `ga`, `gc`, `gp`, `gl`
-
-### Git (`git/`)
-
-Sensible global defaults in `~/.gitconfig`:
-
-- Identity, `nvim` as editor, `main` as default branch
-- `push.autoSetupRemote` (no more `--set-upstream`), `push.followTags`, `pull.rebase`
-- `fetch.prune`, `rebase.autoStash` + `autoSquash` + `updateRefs`, `rerere` enabled
-- `diff.algorithm = histogram`, `merge.conflictStyle = zdiff3`, `help.autocorrect = prompt`
-- A few aliases that don't overlap with the zsh `g*` shortcuts: `st`, `last`, `unstage`, `amend`, `graph`
-
-### Sheldon plugins (`sheldon/`)
-
-Plugins are sourced via `eval "$(sheldon source)"`:
-
-| Plugin | Purpose |
-| :--- | :--- |
-| `zsh-completions` | Extended completion definitions |
-| `zsh-syntax-highlighting` | Fish-like real-time syntax highlighting |
-| `zsh-autosuggestions` | History- and completion-based inline suggestions |
-| `zsh-history-substring-search` | `↑`/`↓` searches history by typed prefix |
-
-### Starship prompt (`starship/`)
-
-Minimal two-line prompt showing: directory → git branch + status → Python / Go version → command duration.
-
-- Success: `❯` (purple) · Error: `❯` (red) · Vim normal mode: `❮` (green)
-- Git status symbols: `⇡⇣` ahead/behind · `!` modified · `?` untracked · `+` staged · `✘` deleted
-- Command duration displayed for commands longer than 2 s
-- Node, Rust, Docker, Conda segments disabled (low noise)
-
-### Neovim (`nvim/`)
-
-[LazyVim](https://www.lazyvim.org/) starter on top of `lazy.nvim` — the upstream
-distro handles LSP, completion, formatting, linting, treesitter, mini.* and the
-rest of the editor experience:
-
-```
-nvim/.config/nvim/
-├── init.lua                —  entry point
-└── lua/
-    ├── config/
-    │   ├── options.lua     —  options overrides (empty by default)
-    │   ├── keymaps.lua     —  keymap overrides  (empty by default)
-    │   ├── autocmds.lua    —  autocmd overrides (empty by default)
-    │   └── lazy.lua        —  lazy.nvim + LazyVim bootstrap
-    └── plugins/            —  custom plugin specs / LazyVim overrides
+```text
+~/projects/api main +2?1 3s
+❯
 ```
 
-**Theme**: [github-nvim-theme](https://github.com/projekt0n/github-nvim-theme)
-— `github_dark` / `github_light`, switched automatically by
-`auto-dark-mode.nvim` based on the system appearance. Ghostty uses the
-matching built-in `github-dark` / `github-light` so the terminal and editor
-share one palette.
+Git status uses ordinary characters: `!` modified, `?` untracked, `+` staged,
+`-` deleted, `r` renamed, `=` conflicts, `*` stash, `>` ahead, `<` behind.
+The prompt marker turns red after a failed command.
 
-External tooling (LSPs, formatters, linters, debug adapters) is installed by
-**mason** on first launch; see the install scripts for the runtimes it needs.
+The GitHub theme files live in `ghostty/.config/ghostty/themes/`.
+Automatic appearance switching requires the desktop to expose its light/dark
+preference to Ghostty.
 
-### Ghostty (`ghostty/`)
+## Shell
 
-- **Font**: TX-02, 20px, ligatures disabled
-- **Theme**: `dark:github-dark, light:github-light` — follows system appearance (both built into ghostty)
-- **Window**: transparent titlebar (theme bg bleeds through), zero padding (balanced), window shadow on
-- **Keybinds**: unified on `ctrl+shift` so they're identical on macOS and Linux (`cmd` aliases to Super on Linux and collides with GNOME)
-- **Clipboard**: `ctrl+shift+c` copy, `ctrl+shift+v` paste, `ctrl+shift+a` select all
-- **Splits**: `ctrl+shift+d` right, `ctrl+shift+e` down, `ctrl+shift+w` close; navigate with `ctrl+shift+hjkl`
-- **Tabs**: `ctrl+shift+t` new tab, `ctrl+1-9` jump to tab
+- Shared, deduplicated history; commands starting with a space are not saved.
+- Case-insensitive tab completion and normal readline-style keybindings.
+- `Ctrl+R` searches history with fzf; `Ctrl+T` selects files; `Alt+C` selects a directory.
+- History suggestions can be accepted with `Ctrl+Space` or the right arrow.
+- `ll` and `la` call standard `ls`; `..`, `...`, and `....` move up directories.
+- Git shortcuts: `g`, `gs`, `ga`, `gc`, `gp`, `gl`.
+- No command spelling correction, forced locale, or replacement of macOS system utilities.
+- Existing SDKMAN installations are loaded if present; SDKMAN is not installed here.
 
-### IdeaVim (`ideavim/`)
+The shell still starts with a basic prompt if optional tools are missing.
+Ubuntu's older fzf integration is supported alongside the newer `fzf --zsh` form.
 
-Full Vim emulation for IntelliJ IDEA with `<Space>` as leader and [which-key](https://github.com/TheBlob42/idea-which-key) popup.
+`EDITOR` defaults to `nano`. Locally, `VISUAL` uses `code --wait` when the VS Code
+command is available; over SSH it stays with `nano`. Git follows these settings.
+Put machine-specific paths and editor choices in `~/.zshrc.local`, for example:
 
-**Plugin emulations**: `surround` · `commentary` · `ReplaceWithRegister` · `exchange` · `argtextobj` · `textobj-entire` · `textobj-indent` · `sneak` · `quickscope` · `matchit` · `multiple-cursors` · `NERDTree`
-
-**Leader groups**:
-
-| Prefix | Group |
-| :--- | :--- |
-| `<leader>f` | Find (files, grep, buffers, symbols) |
-| `<leader>c` | Code actions (rename, format, imports, generate) |
-| `<leader>r` | Refactor (extract method/variable) |
-| `<leader>g` | Git (status, blame, history, diff, branches) |
-| `<leader>x` | Run & test · `<leader>d` Debug |
-| `<leader>w` | Window splits · `<leader>b` Buffers |
-| `<leader>k` | Bookmarks · `<leader>t` Terminal |
-
-> **Note**: `ideavim` is not included in `sync.sh`. Stow it manually if needed:
-> ```bash
-> stow --dir=~/dotfiles --target="$HOME" ideavim
-> ```
-
-## Scripts
-
-| Script | Usage | Description |
-| :--- | :--- | :--- |
-| `scripts/install-macos.sh` | `./scripts/install-macos.sh` | macOS bootstrap: Homebrew + all packages/cask + stow |
-| `scripts/install-arch.sh` | `./scripts/install-arch.sh` | Arch bootstrap: pacman packages + locale + stow |
-| `scripts/sync.sh` | `./scripts/sync.sh` | Stow (or re-stow) all packages |
-| `scripts/purge.sh` | `./scripts/purge.sh` | Unstow all packages and remove runtime caches |
-| `scripts/purge.sh <pkg>` | `./scripts/purge.sh nvim` | Unstow a single package |
-
-## Maintenance
-
-**Add a new config:**
-1. Create `<tool>/<mirror of home dir structure>/` (e.g. `tmux/.tmux.conf`)
-2. Add the package name to the `PACKAGES` array in `scripts/sync.sh`
-3. Run `./scripts/sync.sh`
-
-**Remove all symlinks and caches** (full reset):
-```bash
-./scripts/purge.sh
+```sh
+export EDITOR=nano
+export VISUAL="$EDITOR"
 ```
 
-**Update Sheldon plugins:**
-```bash
-sheldon lock --update
+## Git
+
+The shared config contains only a few everyday defaults:
+
+| Setting | Behavior |
+| --- | --- |
+| `user.name`, `user.email` | Commit author identity; change these if you fork the repository |
+| `init.defaultBranch = main` | Use `main` when creating a repository |
+| `push.autoSetupRemote = true` | Set the upstream automatically on the first push |
+| `pull.ff = only` | Update without creating merge commits or rebasing automatically |
+| `fetch.prune = true` | Remove stale remote-tracking branches; keep local branches |
+| `merge.conflictStyle = zdiff3` | Show the common base when presenting conflicts |
+| `diff.algorithm = histogram` | Use histogram matching for diffs |
+
+If local and remote histories diverge, `git pull` stops so you can explicitly
+choose a merge or rebase. Git aliases and automatic tag publishing, tag pruning,
+stashing, and conflict-resolution reuse are not configured. The shell shortcuts
+listed above remain available.
+
+Git loads `~/.gitconfig.local` last for machine-specific overrides, such as a
+work email or `core.editor`. This file is not tracked by the repository.
+
+## Ghostty shortcuts
+
+| Action | Shortcut |
+| --- | --- |
+| Copy / paste | `Ctrl+Shift+C` / `Ctrl+Shift+V` |
+| New tab / select tab | `Ctrl+Shift+T` / `Ctrl+1` through `Ctrl+9` |
+| Split right / down | `Ctrl+Shift+D` / `Ctrl+Shift+E` |
+| Move between splits | `Ctrl+Shift+H/J/K/L` |
+| Close surface | `Ctrl+Shift+W` |
+| Font size | `Ctrl+Shift+=`, `Ctrl+Shift+-`, `Ctrl+Shift+0` |
+
+## Linking and maintenance
+
+Each directory mirrors the relevant paths in your home directory:
+
+| Package | Target |
+| --- | --- |
+| `ghostty` | `~/.config/ghostty/` (desktop only) |
+| `git` | `~/.gitconfig` |
+| `sheldon` | `~/.config/sheldon/` |
+| `starship` | `~/.config/starship.toml` |
+| `zsh` | `~/.zshrc` |
+| `ideavim` | `~/.ideavimrc` (manual, unchanged) |
+
+```sh
+./scripts/sync.sh --cli --dry-run  # check without changing links
+./scripts/sync.sh --cli           # shell configs
+./scripts/sync.sh --desktop       # shell configs + Ghostty
+sheldon lock --update             # update shell plugins
+./scripts/purge.sh                # confirm, then unlink all managed configs
+./scripts/purge.sh ghostty        # unlink just one package
 ```
 
-**Files excluded from stowing** are listed in `.stow-local-ignore` (e.g. `README.md`, `.git`, `.DS_Store`).
+Without a profile, `sync.sh` defaults to desktop on macOS and CLI on Linux.
+A CLI sync does not remove an existing desktop configuration. Conflicting files
+are reported before links are changed; they are never adopted into the repository
+or overwritten. Move conflicting files aside yourself, then rerun the command.
+Unlinking preserves command history, caches, installed applications, and local overrides.
+
+IdeaVim is intentionally outside automatic installation and cleanup:
+
+```sh
+stow --dir="$PWD" --target="$HOME" ideavim
+```
+
+## Updating an older installation
+
+Arch Linux and Neovim are no longer managed by this repository. The installers
+do not uninstall previously installed tools or delete their data. Old links to
+removed packages can remain in your home directory; inspect and remove those
+links separately if needed.
+
+After pulling changes, run the appropriate `sync.sh` profile and open a new Zsh
+session. Reload Ghostty's configuration or restart the application to apply
+appearance changes. Run the installer if required tools or fonts are missing.
+
+## Validation
+
+Shell syntax, ShellCheck, Ghostty configuration, shell startup, prompt rendering,
+and Stow linking/conflict handling have been checked locally on macOS.
+End-to-end installation on a fresh Ubuntu machine has not yet been verified.

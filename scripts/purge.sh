@@ -1,103 +1,27 @@
 #!/usr/bin/env bash
-# ============================================================
-# scripts/purge.sh
-# Unlink all dotfile symlinks and remove leftover config files.
-# Restores the system to a state as if dotfiles were never applied.
-# Usage: ./scripts/purge.sh [package]
-#   No args : purge everything
-#   With arg : purge single package, e.g. ./scripts/purge.sh nvim
-# ============================================================
-
+# Unlink managed configs; preserve caches, history, and installed applications.
+# Usage: ./scripts/purge.sh [git|sheldon|starship|zsh|ghostty]
 set -euo pipefail
-
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TARGET_DIR="$HOME"
-
-PACKAGES=(
-  ghostty
-  git
-  nvim
-  sheldon
-  starship
-  zed
-  zsh
-)
-
-# Files/dirs to remove after unstowing (not managed by stow)
-# Add anything that gets created at runtime and should be cleaned up.
-# NOTE: ~/.zsh_history is deliberately NOT listed — command history is kept
-# across purges so frequent dotfile reinstalls don't wipe it.
-EXTRA_CLEANUP=(
-  "$HOME/.zcompdump"
-  "$HOME/.local/share/nvim"    # lazy.nvim plugins
-  "$HOME/.local/state/nvim"    # nvim state
-  "$HOME/.local/share/sheldon" # sheldon plugin cache
-  "$HOME/.cache/nvim"
-  "$HOME/.cache/starship"
-)
-
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-RED='\033[0;31m'
-BOLD='\033[1m'
-NC='\033[0m'
-
-log_ok() { echo -e "${GREEN}✓${NC}  $1"; }
-log_warn() { echo -e "${YELLOW}!${NC}  $1"; }
-log_err() { echo -e "${RED}✗${NC}  $1"; }
-
-if ! command -v stow &>/dev/null; then
-  log_err "stow not found — install with: brew install stow"
+PACKAGES=(git sheldon starship zsh ghostty)
+if [[ $# -gt 1 ]]; then
+  echo 'Usage: purge.sh [git|sheldon|starship|zsh|ghostty]' >&2
   exit 1
+elif [[ $# == 1 ]]; then
+  case "$1" in
+  git | sheldon | starship | zsh | ghostty) PACKAGES=("$1") ;;
+  *)
+    printf 'Unknown package: %s\n' "$1" >&2
+    exit 1
+    ;;
+  esac
+else
+  read -r -p 'Unlink all managed configs? [y/N] ' confirm
+  [[ $confirm == y || $confirm == Y ]] || exit 0
 fi
-
-# Single package mode
-if [[ $# -eq 1 ]]; then
-  PACKAGES=("$1")
-  EXTRA_CLEANUP=() # skip cleanup when targeting single package
-fi
-
-# ── Confirm ──────────────────────────────────────────────────
-echo ""
-if [[ ${#PACKAGES[@]} -gt 1 ]]; then
-  echo -e "${BOLD}This will remove all dotfile symlinks and runtime caches.${NC}"
-  read -r -p "Continue? [y/N] " confirm
-  [[ "$confirm" =~ ^[Yy]$ ]] || {
-    echo "Aborted."
-    exit 0
-  }
-fi
-
-echo ""
-
-# ── Unstow packages ──────────────────────────────────────────
-echo -e "${BOLD}── Unlinking packages${NC}"
-for pkg in "${PACKAGES[@]}"; do
-  pkg_path="$DOTFILES_DIR/$pkg"
-
-  if [[ ! -d "$pkg_path" ]]; then
-    log_warn "$pkg — directory not found, skipping"
-    continue
-  fi
-
-  if stow --dir="$DOTFILES_DIR" --target="$TARGET_DIR" --delete "$pkg" 2>/dev/null; then
-    log_ok "$pkg"
-  else
-    log_err "$pkg — failed"
-  fi
-done
-
-# ── Remove runtime caches ────────────────────────────────────
-if [[ ${#EXTRA_CLEANUP[@]} -gt 0 ]]; then
-  echo ""
-  echo -e "${BOLD}── Removing caches${NC}"
-  for path in "${EXTRA_CLEANUP[@]}"; do
-    if [[ -e "$path" || -L "$path" ]]; then
-      rm -rf "$path"
-      log_ok "removed $path"
-    fi
-  done
-fi
-
-echo ""
-echo "System returned to clean state."
+command -v stow >/dev/null || {
+  echo 'Install GNU Stow first.' >&2
+  exit 1
+}
+stow --no-folding --ignore='\.DS_Store$' --ignore='\.swp$' --dir="$DOTFILES_DIR" --target="$HOME" --delete "${PACKAGES[@]}"
+echo 'Configs unlinked. History, caches, and installed applications were preserved.'

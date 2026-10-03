@@ -1,136 +1,70 @@
-# ── Performance: skip compinit check on insecure dirs ────────
-ZSH_DISABLE_COMPFIX=true
+# Keep the shell usable even before optional tools have been installed.
+[[ -o interactive ]] || return
 
-# ── History ──────────────────────────────────────────────────
-HISTFILE="$HOME/.zsh_history"
-# Effectively unlimited. HISTSIZE (in-memory) is kept slightly larger than
-# SAVEHIST (on-disk) so dedup runs on the larger set before writing.
-HISTSIZE=1200000
-SAVEHIST=1000000
-
-setopt HIST_IGNORE_ALL_DUPS   # no duplicate entries
-setopt HIST_IGNORE_SPACE      # ignore commands starting with space
-setopt HIST_REDUCE_BLANKS     # strip superfluous blanks before saving
-setopt HIST_FIND_NO_DUPS      # don't show dupes when cycling search results
-setopt HIST_VERIFY            # show expanded history before executing
-setopt SHARE_HISTORY          # share history across sessions
-setopt EXTENDED_HISTORY       # save timestamp and duration
-
-# ── Completion ───────────────────────────────────────────────
-autoload -Uz compinit
-compinit -d "$HOME/.zcompdump"
-
-zstyle ':completion:*' menu select
-zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
-zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*:descriptions' format '%F{yellow}-- %d --%f'
-zstyle ':completion:*:git-checkout:*' sort false
-
-# ── Options ──────────────────────────────────────────────────
-setopt AUTO_CD
-setopt AUTO_PUSHD
-setopt PUSHD_IGNORE_DUPS
-setopt CORRECT
-setopt NO_BEEP
-
-# ── GNU coreutils (macOS only) ───────────────────────────────
-if [[ "$(uname)" == "Darwin" ]]; then
-  export PATH="$(brew --prefix)/opt/coreutils/libexec/gnubin:$PATH"
-  export PATH="$(brew --prefix)/opt/gnu-sed/libexec/gnubin:$PATH"
-  export PATH="$(brew --prefix)/opt/grep/libexec/gnubin:$PATH"
-  export PATH="$(brew --prefix)/opt/bash/bin:$PATH"
-fi
-
-# ── PATH ─────────────────────────────────────────────────────
-export PATH="$HOME/.local/bin:$PATH"
-export PATH="$HOME/go/bin:$PATH"
-
-# ── Editor ───────────────────────────────────────────────────
-export EDITOR="nvim"
-export VISUAL="nvim"
-
-# ── Language ─────────────────────────────────────────────────
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
-
-# ── Sheldon ──────────────────────────────────────────────────
-eval "$(sheldon source)"
-
-# ── Plugin config (after sheldon) ────────────────────────────
-
-# zsh-autosuggestions
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20
-bindkey '^ ' autosuggest-accept           # ctrl+space accepts suggestion
-
-# zsh-history-substring-search
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND='bg=cyan,fg=black,bold'
-
-# ── Modern CLI tools (loaded only if installed) ───────────────
-
-# eza: modern ls
-if command -v eza &>/dev/null; then
-  alias ls='eza --icons'
-  alias ll='eza -lh --icons --git'
-  alias la='eza -lha --icons --git'
-  alias lt='eza --tree --icons --level=2'
-fi
-
-# bat: modern cat
-if command -v bat &>/dev/null; then
-  alias cat='bat --style=plain'
-  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
-fi
-
-# zoxide: smarter cd
-if command -v zoxide &>/dev/null; then
-  eval "$(zoxide init zsh)"
-  alias cd='z'
-fi
-
-# fzf: fuzzy finder
-if command -v fzf &>/dev/null; then
-  eval "$(fzf --zsh)"
-  export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-  if command -v fd &>/dev/null; then
-    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-    export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+# Homebrew uses a different prefix on Apple Silicon and Intel Macs.
+if [[ $OSTYPE == darwin* ]] && ! command -v brew &>/dev/null; then
+  if [[ -x /opt/homebrew/bin/brew ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  elif [[ -x /usr/local/bin/brew ]]; then
+    eval "$(/usr/local/bin/brew shellenv)"
   fi
 fi
+typeset -U path
+path=("$HOME/.local/bin" $path)
 
-# ── Aliases ──────────────────────────────────────────────────
-alias v='nvim'
-alias vi='nvim'
-alias vim='nvim'
+# Shared history; a leading space keeps a command out of the history file.
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=1200000
+SAVEHIST=1000000
+setopt HIST_IGNORE_ALL_DUPS HIST_IGNORE_SPACE HIST_REDUCE_BLANKS
+setopt HIST_FIND_NO_DUPS HIST_VERIFY SHARE_HISTORY EXTENDED_HISTORY
+setopt AUTO_CD AUTO_PUSHD PUSHD_IGNORE_DUPS NO_BEEP
+unsetopt CORRECT
 
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
+# Completion and ordinary readline-style editing.
+autoload -Uz compinit
+compinit -d "$HOME/.zcompdump"
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+zstyle ':completion:*:descriptions' format '%F{blue}%d%f'
+zstyle ':completion:*:git-checkout:*' sort false
+bindkey -e
 
-alias grep='grep --color=auto'
-alias mkdir='mkdir -p'
+# Git and terminal tools always have an editor, including on SSH sessions.
+export EDITOR=nano
+export VISUAL="$EDITOR"
+if [[ -z ${SSH_CONNECTION:-}${SSH_TTY:-} ]] && command -v code &>/dev/null; then
+  export VISUAL='code --wait'
+fi
 
-alias g='git'
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gp='git push'
-alias gl='git log --oneline --graph --decorate'
+# Use the terminal palette so both the light and dark themes stay readable.
+export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border=rounded --color=16'
+if command -v fzf &>/dev/null; then
+  # Older Ubuntu packages ship the integration as a separate file.
+  if _fzf_init=$(fzf --zsh 2>/dev/null); then
+    eval "$_fzf_init"
+  elif [[ -r /usr/share/doc/fzf/examples/key-bindings.zsh ]]; then
+    source /usr/share/doc/fzf/examples/key-bindings.zsh
+    [[ -r /usr/share/doc/fzf/examples/completion.zsh ]] &&
+      source /usr/share/doc/fzf/examples/completion.zsh
+  fi
+  unset _fzf_init
+fi
 
-alias py='python3'
-alias pip='pip3'
-
-# ── SDKMAN ───────────────────────────────────────────────────
+# Existing Java installations remain optional.
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] && source "$SDKMAN_DIR/bin/sdkman-init.sh"
 
-# ── Starship prompt ──────────────────────────────────────────
-eval "$(starship init zsh)"
+# Machine-specific paths and editor overrides belong outside the shared config.
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"
 
-# Added by Antigravity IDE
-export PATH="/Users/bartek/.antigravity-ide/antigravity-ide/bin:$PATH"
+PROMPT='%~ %# '
+command -v starship &>/dev/null && eval "$(starship init zsh)"
 
-# Added by Antigravity IDE
-export PATH="/Users/bartek/.antigravity-ide/antigravity-ide/bin:$PATH"
+# Load highlighting last, after other widgets have been registered.
+ZSH_AUTOSUGGEST_STRATEGY=(history)
+ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=1000
+if command -v sheldon &>/dev/null; then
+  eval "$(sheldon source)"
+  (($+widgets[autosuggest - accept])) && bindkey '^ ' autosuggest-accept
+fi
