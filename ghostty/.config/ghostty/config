@@ -26,6 +26,7 @@ cursor-style-blink = true
 scrollback-limit = 16777216
 
 # ── Shell integration ────────────────────────────────────────
+command                    = zsh
 shell-integration          = zsh
 shell-integration-features = cursor,sudo,title
 
