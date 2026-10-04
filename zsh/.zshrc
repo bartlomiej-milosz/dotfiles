@@ -67,5 +67,5 @@ ZSH_AUTOSUGGEST_STRATEGY=(history)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=1000
 if command -v sheldon &>/dev/null; then
   eval "$(sheldon source)"
-  (($+widgets[autosuggest - accept])) && bindkey '^ ' autosuggest-accept
+  (($+widgets[autosuggest-accept])) && bindkey '^ ' autosuggest-accept
 fi

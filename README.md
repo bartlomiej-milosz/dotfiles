@@ -81,10 +81,9 @@ preference to Ghostty.
 
 - Shared, deduplicated history; commands starting with a space are not saved.
 - Case-insensitive tab completion and normal readline-style keybindings.
-- `Ctrl+R` searches history with fzf; `Ctrl+T` selects files; `Alt+C` selects a directory.
 - History suggestions can be accepted with `Ctrl+Space` or the right arrow.
-- `ll` and `la` call standard `ls`; `..`, `...`, and `....` move up directories.
-- Git shortcuts: `g`, `gs`, `ga`, `gc`, `gp`, `gl`.
+- Use standard commands such as `ls -lah`, `cd ..`, and `git status`;
+  the shared Zsh config defines no aliases.
 - No command spelling correction, forced locale, or replacement of macOS system utilities.
 - Existing SDKMAN installations are loaded if present; SDKMAN is not installed here.
 
@@ -99,6 +98,30 @@ Put machine-specific paths and editor choices in `~/.zshrc.local`, for example:
 export EDITOR=nano
 export VISUAL="$EDITOR"
 ```
+
+### fzf shortcuts
+
+The shell loads fzf's keybindings and fuzzy completion automatically when fzf is
+installed. These shortcuts work at the Zsh prompt:
+
+| Shortcut | Action | Example |
+| --- | --- | --- |
+| `Ctrl+R` | Search command history and insert the selected command without running it | Type part of an old command, press `Ctrl+R`, then select a match |
+| `Ctrl+T` | Search files and directories under the current directory and insert selected paths | Type `nano `, press `Ctrl+T`, then select a file |
+| `Alt+C` | Search directories under the current directory and change into the selected one | Press `Alt+C`, then select a project directory |
+| `**` followed by `Tab` | Fuzzy-complete paths for supported commands | Type `nano **` or `cd **`, then press `Tab` |
+
+Inside the picker, type to narrow the results, use `Up` / `Down` or `Ctrl+P` /
+`Ctrl+N` to move, `Enter` to confirm, and `Esc` or `Ctrl+C` to cancel. In the
+`Ctrl+T` picker, `Tab` / `Shift+Tab` select multiple paths. In the `Ctrl+R` picker,
+press `Ctrl+R` again to toggle relevance sorting.
+
+On macOS, Ghostty maps Option to Alt, so `Alt+C` is `Option+C`. If another terminal
+intercepts it, press `Esc` and then `c` instead. Open a new terminal or run
+`source ~/.zshrc` after updating the config.
+
+See the [fzf documentation](https://github.com/junegunn/fzf#key-bindings-for-command-line)
+for more examples and customization.
 
 ## Git
 
@@ -116,8 +139,8 @@ The shared config contains only a few everyday defaults:
 
 If local and remote histories diverge, `git pull` stops so you can explicitly
 choose a merge or rebase. Git aliases and automatic tag publishing, tag pruning,
-stashing, and conflict-resolution reuse are not configured. The shell shortcuts
-listed above remain available.
+stashing, and conflict-resolution reuse are not configured. Use full Git commands,
+such as `git status`, `git add`, `git commit`, and `git push`.
 
 Git loads `~/.gitconfig.local` last for machine-specific overrides, such as a
 work email or `core.editor`. This file is not tracked by the repository.
