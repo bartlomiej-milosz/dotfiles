@@ -1,7 +1,8 @@
 # dotfiles
 
-A small, shared terminal setup for **macOS and Ubuntu 24.04 / 26.04 LTS**
-(64-bit amd64 / arm64), managed with GNU Stow.
+A shared terminal setup for **macOS and Ubuntu 24.04 / 26.04 LTS**
+(64-bit amd64 / arm64), managed with GNU Stow, with a GNOME desktop and developer
+tools profile for Ubuntu.
 
 - **Ghostty** with JetBrains Mono, GitHub Light/Dark following system appearance,
   an opaque background, and a little space around the text.
@@ -9,6 +10,8 @@ A small, shared terminal setup for **macOS and Ubuntu 24.04 / 26.04 LTS**
 - Two plugins managed by **Sheldon**: history suggestions and syntax highlighting.
 - Standard `ls`, `cat`, `cd`, and other system commands. No icon font required.
 - An independent **IdeaVim** config, kept as-is and installed separately.
+- Ubuntu's desktop profile adds a standard **GNOME** session and Adwaita appearance.
+- Ubuntu installs **SDKMAN** in both profiles and **VS Code** in the desktop profile.
 
 ## Install
 
@@ -21,23 +24,33 @@ cd ~/dotfiles
 # macOS: shell tools, Ghostty, and JetBrains Mono via Homebrew
 ./scripts/install-macos.sh
 
-# Ubuntu VM / SSH machine: shell tools only
+# Ubuntu VM / SSH machine: shell tools and SDKMAN
 ./scripts/install-ubuntu.sh
 
-# Ubuntu desktop: also install Ghostty and JetBrains Mono
+# Ubuntu desktop: also VS Code, Ghostty, JetBrains Mono, and GNOME / Adwaita appearance
 ./scripts/install-ubuntu.sh --desktop
 ```
 
 | System | Default profile | Desktop packages |
 | --- | --- | --- |
 | macOS | `--desktop` | Ghostty and JetBrains Mono via Homebrew |
-| Ubuntu 24.04 LTS | `--cli` | Ghostty via Snap; JetBrains Mono via apt |
-| Ubuntu 26.04 LTS | `--cli` | Ghostty and JetBrains Mono via apt |
+| Ubuntu 24.04 LTS | `--cli` | VS Code, GNOME/Adwaita, JetBrains Mono, Cantarell; Ghostty via Snap |
+| Ubuntu 26.04 LTS | `--cli` | VS Code, Ghostty, GNOME/Adwaita, JetBrains Mono, Adwaita Sans |
 
 Both installers accept `--cli` and `--desktop`. Ubuntu defaults to `--cli`,
 regardless of whether a desktop is detected.
-The installers do not install language runtimes or development environments.
-They stop on errors and can be rerun; existing applications are not uninstalled.
+On Ubuntu, no flag is equivalent to `--cli`:
+
+| Component | `--cli` / no flag | `--desktop` |
+| --- | --- | --- |
+| Git, Stow, Zsh, fzf, nano, Starship, Sheldon | Install and link shell configs | Same |
+| SDKMAN | Install for the current user | Same |
+| VS Code | Skip | Install through Microsoft's signed apt repository |
+| Ghostty and desktop fonts | Skip | Install and link Ghostty config |
+| GNOME session and appearance | Skip | Install packages and apply preferences in a GNOME session |
+
+The installers stop on errors and can be rerun; existing applications are not
+uninstalled. Java versions and other language runtimes are installed separately.
 
 On Ubuntu, enable the standard **universe** repository if your minimal image
 omits it. Most tools come from apt. On 24.04, Starship is installed using its
@@ -56,9 +69,52 @@ it your login shell with `chsh -s /usr/bin/zsh`, then log out and back in.
 An SSH host needs only the CLI profile: the font and window theme belong to
 the computer running the terminal application.
 
+## Developer tools on Ubuntu
+
+**VS Code** is installed by `--desktop` from Microsoft's official signed apt
+repository. Updates arrive through apt. Run `code .` to open the current project
+or `code --version` to verify the installation. The shell uses `code --wait` as
+the visual editor locally when available; SSH sessions use `nano`.
+
+**SDKMAN** is installed by both Ubuntu profiles into `~/.sdkman`. It has no
+official apt package, so the installer uses the official script with
+`rcupdate=false`; the shared Zsh config already loads it. Existing installations
+are reused, and its `zip` and `unzip` dependencies come from apt. Open a new Zsh
+session before using it:
+
+```sh
+sdk version       # verify SDKMAN
+sdk list java     # browse available JDKs
+sdk install java  # optionally install the current default JDK
+```
+
+**JetBrains Toolbox** and its IDEs are installed separately. Download its Linux
+archive, extract it to a permanent location such as `~/.local/opt`, and run
+`./bin/jetbrains-toolbox` from the extracted directory. Toolbox creates an
+application-menu entry on first launch and manages IDE installations and updates.
+Steam and other personal desktop applications are also outside the installer.
+
+Sources: [VS Code on Linux](https://code.visualstudio.com/docs/setup/linux),
+[SDKMAN installation](https://sdkman.io/install/),
+[JetBrains Toolbox installation](https://www.jetbrains.com/help/toolbox-app/installation.html).
+
 ## Appearance
 
+### Terminal
+
 Ghostty uses the regular **JetBrains Mono** family, 20 pt, with ligatures disabled.
+The desktop installers install the font automatically. On Ubuntu, `--desktop`
+also installs the GNOME appearance packages and refreshes the font cache.
+Ghostty uses JetBrains Mono independently of the desktop's font preferences.
+
+For an existing Ubuntu desktop installation, rerun:
+
+```sh
+./scripts/install-ubuntu.sh --desktop
+```
+
+Verify the installed terminal font with `fc-match 'JetBrains Mono'`, then reopen Ghostty.
+
 The two-line prompt uses the terminal's palette so it follows the light/dark theme.
 It displays the directory, Git branch and changes, an activated Python environment,
 and duration for commands taking at least two seconds. SSH sessions also show the
@@ -77,6 +133,48 @@ The GitHub theme files live in `ghostty/.config/ghostty/themes/`.
 Automatic appearance switching requires the desktop to expose its light/dark
 preference to Ghostty.
 
+### GNOME appearance on Ubuntu
+
+The desktop installer installs `gnome-session` and applies these user preferences
+when run from a GNOME desktop terminal:
+
+| Setting | Ubuntu 26.04 | Ubuntu 24.04 (GNOME 46) |
+| --- | --- | --- |
+| Interface font | Adwaita Sans 11 | Cantarell 11 |
+| Document font | Adwaita Sans 12 | Sans 11 |
+| Monospace font | JetBrains Mono 11 | JetBrains Mono 11 |
+| Icons and cursor | Adwaita | Adwaita |
+| Legacy GTK applications | Adwaita; Adwaita-dark if dark mode is selected | Same |
+| Window titles | Follow the interface font; close button only | Same |
+| Sound theme | freedesktop | freedesktop |
+
+Ubuntu 24.04 uses Cantarell for the interface; Ubuntu 26.04 uses Adwaita Sans.
+If Adwaita Sans is already installed on 24.04, the configuration script uses it
+too. Both versions use JetBrains Mono for fixed-width text in applications that
+follow GNOME's monospace preference. All fonts used by the installer come from apt.
+
+To apply the preferences again, or after installing over SSH, run from a terminal
+in your desktop session, without sudo:
+
+```sh
+./scripts/configure-gnome.sh
+```
+
+For the standard GNOME Shell, log out, select your user, open the session menu
+(gear icon), and choose **GNOME** before logging in. The Ubuntu session uses its
+own Shell styling and extensions. The installer adds the GNOME session alongside
+Ubuntu; session selection is saved by the login screen. Existing user extensions
+and the light/dark preference are preserved.
+
+On Ubuntu 26.04, install the configured fonts with
+`sudo apt install fonts-adwaita fonts-jetbrains-mono`. Check them with
+`fc-match 'Adwaita Sans'` and `fc-match 'JetBrains Mono'`.
+
+Sources: [GNOME fonts](https://github.com/GNOME/adwaita-fonts),
+[GNOME 48 release notes](https://release.gnome.org/48/),
+[Ubuntu's GNOME customizations](https://help.ubuntu.com/stable/ubuntu-help/gnome-on-ubuntu.html.en).
+
+
 ## Shell
 
 - Shared, deduplicated history; commands starting with a space are not saved.
@@ -85,7 +183,8 @@ preference to Ghostty.
 - Use standard commands such as `ls -lah`, `cd ..`, and `git status`;
   the shared Zsh config defines no aliases.
 - No command spelling correction, forced locale, or replacement of macOS system utilities.
-- Existing SDKMAN installations are loaded if present; SDKMAN is not installed here.
+- SDKMAN is loaded when present. Both Ubuntu profiles install it automatically;
+  on macOS, install it separately.
 
 The shell still starts with a basic prompt if optional tools are missing.
 Ubuntu's older fzf integration is supported alongside the newer `fzf --zsh` form.
@@ -200,9 +299,16 @@ links separately if needed.
 After pulling changes, run the appropriate `sync.sh` profile and open a new Zsh
 session. Reload Ghostty's configuration or restart the application to apply
 appearance changes. Run the installer if required tools or fonts are missing.
+`sync.sh` only manages dotfile links; it does not install packages or apply GNOME
+preferences. To reapply the desktop appearance, run `./scripts/configure-gnome.sh`
+from a terminal in your GNOME session, without sudo.
 
 ## Validation
 
 Shell syntax, ShellCheck, Ghostty configuration, shell startup, prompt rendering,
 and Stow linking/conflict handling have been checked locally on macOS.
-End-to-end installation on a fresh Ubuntu machine has not yet been verified.
+The Ubuntu installer and GNOME configuration have also been checked for shell
+syntax, profile selection, repeated runs, and font detection. Package installation
+and desktop writes were simulated for those checks. The required desktop packages
+and SDKMAN are installed on the current Ubuntu 26.04 machine; end-to-end
+installation on a fresh Ubuntu machine has not yet been verified.
