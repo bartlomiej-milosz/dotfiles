@@ -31,7 +31,7 @@ esac
 }
 
 sudo apt-get update
-sudo apt-get install -y git stow zsh fzf nano curl ca-certificates tar gzip
+sudo apt-get install -y git stow zsh fzf nano curl ca-certificates tar gzip zip unzip
 export PATH="$HOME/.local/bin:$PATH"
 mkdir -p "$HOME/.local/bin"
 INSTALL_TMP=$(mktemp -d)
@@ -51,8 +51,54 @@ if ! command -v sheldon >/dev/null; then
   bash "$INSTALL_TMP/sheldon.sh" --repo rossmacarthur/sheldon --to "$HOME/.local/bin"
 fi
 
+# The shared Zsh config already loads SDKMAN; do not let its installer edit rc files.
+export SDKMAN_DIR="$HOME/.sdkman"
+if [[ ! -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]]; then
+  curl -fsSL 'https://get.sdkman.io?rcupdate=false' -o "$INSTALL_TMP/sdkman.sh"
+  bash "$INSTALL_TMP/sdkman.sh"
+  [[ -s "$SDKMAN_DIR/bin/sdkman-init.sh" ]] || {
+    echo 'SDKMAN installation did not create sdkman-init.sh; check the installer output.' >&2
+    exit 1
+  }
+fi
+
 if [[ $MODE == --desktop ]]; then
-  sudo apt-get install -y fonts-jetbrains-mono
+  # Use Microsoft's signed APT repository for VS Code and subsequent updates.
+  sudo apt-get install -y gpg
+  if ! grep -qs 'https://packages.microsoft.com/repos/code' \
+    /etc/apt/sources.list.d/vscode.sources /etc/apt/sources.list.d/vscode.list; then
+    curl -fsSL https://packages.microsoft.com/keys/microsoft.asc -o "$INSTALL_TMP/microsoft.asc"
+    gpg --batch --yes --dearmor -o "$INSTALL_TMP/microsoft.gpg" "$INSTALL_TMP/microsoft.asc"
+    sudo install -d -m 755 /usr/share/keyrings /etc/apt/sources.list.d
+    sudo install -m 644 "$INSTALL_TMP/microsoft.gpg" /usr/share/keyrings/microsoft.gpg
+    cat > "$INSTALL_TMP/vscode.sources" <<'EOF'
+Types: deb
+URIs: https://packages.microsoft.com/repos/code
+Suites: stable
+Components: main
+Architectures: amd64 arm64
+Signed-By: /usr/share/keyrings/microsoft.gpg
+EOF
+    sudo install -m 644 "$INSTALL_TMP/vscode.sources" /etc/apt/sources.list.d/vscode.sources
+  fi
+  sudo apt-get update
+  printf '%s\n' 'code code/add-microsoft-repo boolean true' | sudo debconf-set-selections
+  sudo apt-get install -y code
+  sudo apt-get install -y fonts-jetbrains-mono fontconfig gnome-session \
+    adwaita-icon-theme gnome-themes-extra sound-theme-freedesktop
+  if [[ $VERSION_ID == 26.04 ]]; then
+    sudo apt-get install -y fonts-adwaita
+  else
+    sudo apt-get install -y fonts-cantarell fonts-dejavu-core
+  fi
+  fc-cache -f
+  if [[ ${XDG_CURRENT_DESKTOP:-} == *GNOME* && -n ${DBUS_SESSION_BUS_ADDRESS:-} ]]; then
+    "$DOTFILES_DIR/scripts/configure-gnome.sh"
+  else
+    printf '%s\n' 'To apply the GNOME appearance, run in your desktop session:' \
+      "$DOTFILES_DIR/scripts/configure-gnome.sh"
+  fi
+  printf '%s\n' 'For the standard GNOME Shell, log out and choose GNOME from the login screen session menu.'
   if [[ $VERSION_ID == 26.04 ]]; then
     sudo apt-get install -y ghostty
   else
