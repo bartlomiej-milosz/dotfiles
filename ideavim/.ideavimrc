@@ -68,7 +68,7 @@ set ideavimsupport=dialog      " Use IdeaVim in dialogs
 " Text Manipulation
 set surround                   " Surround text objects (ys, cs, ds)
 set commentary                 " Comment with gc motion
-set ReplaceWithRegister        " Replace motion with register (gr)
+set ReplaceWithRegister        " Register replacement; normal-mode gr is overridden below
 set exchange                   " Exchange text regions (cx)
 
 " Text Objects
@@ -246,10 +246,9 @@ let g:WhichKeyDesc_multicursor_all = "<leader>ma Select All"
 " 5.1 Navigation
 " -----------------------------------------------------------------------------
 
-" Window Navigation (Ctrl + hjkl)
+" Window Navigation (Ctrl + h/j/l; Ctrl + k is reserved for ParameterInfo)
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 " Window Resizing (Ctrl + Shift + hjkl)
@@ -315,6 +314,7 @@ nnoremap <leader>E :NERDTreeFind<CR>
 nnoremap gd :action GotoDeclaration<CR>
 nnoremap gD :action GotoTypeDeclaration<CR>
 nnoremap gi :action GotoImplementation<CR>
+" Preserve FindUsages on gr, overriding ReplaceWithRegister in normal mode.
 nnoremap gr :action FindUsages<CR>
 nnoremap <leader>u :action ShowUsages<CR>
 

@@ -1,4 +1,3 @@
-# shellcheck disable=SC1091,SC2034,SC2154,SC2206
 # Keep the shell usable even before optional tools have been installed.
 [[ -o interactive ]] || return
 
@@ -67,5 +66,7 @@ ZSH_AUTOSUGGEST_STRATEGY=(history)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=1000
 if command -v sheldon &>/dev/null; then
   eval "$(sheldon source)"
-  (($+widgets[autosuggest-accept])) && bindkey '^ ' autosuggest-accept
+  if (( $+widgets[autosuggest-accept] )); then
+    bindkey '^ ' autosuggest-accept
+  fi
 fi

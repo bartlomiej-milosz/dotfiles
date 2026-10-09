@@ -1,202 +1,137 @@
 # dotfiles
 
-A shared terminal setup for **macOS and Ubuntu 24.04 / 26.04 LTS**
-(64-bit amd64 / arm64), managed with GNU Stow, with a GNOME desktop and developer
-tools profile for Ubuntu.
+My personal shell and terminal configuration for macOS and Ubuntu, managed with
+GNU Stow. The setup combines a small Zsh configuration, a readable prompt, and
+light/dark terminal themes while keeping standard system commands unchanged.
 
-- **Ghostty** with JetBrains Mono, GitHub Light/Dark following system appearance,
-  an opaque background, and a little space around the text.
-- **Zsh**, **Starship**, and **fzf** for everyday shell use.
-- Two plugins managed by **Sheldon**: history suggestions and syntax highlighting.
-- Standard `ls`, `cat`, `cd`, and other system commands. No icon font required.
-- An independent **IdeaVim** config, kept as-is and installed separately.
-- Ubuntu's desktop profile adds a standard **GNOME** session and Adwaita appearance.
-- Ubuntu installs **SDKMAN** in both profiles and **VS Code** in the desktop profile.
+Installer scripts target macOS and Ubuntu 24.04 / 26.04 LTS. They separate a
+**CLI profile** for shell tools from a **desktop profile** that also includes
+Ghostty and JetBrains Mono. On Ubuntu, both profiles install SDKMAN, while the
+desktop profile adds VS Code and a GNOME session with Adwaita appearance settings.
+IdeaVim is optional and installed separately.
 
-## Install
+## What's included
 
-Clone the repository and run the installer as your regular user:
+| Component | Configuration |
+| --- | --- |
+| [Zsh](zsh/.zshrc) | Shared history, case-insensitive completion, Emacs-style editing, and optional tool integration. |
+| [Starship](starship/.config/starship.toml) | A two-line prompt showing the directory, Git status, Python virtual environment, and command duration. |
+| [Sheldon](sheldon/.config/sheldon/plugins.toml) | Two plugins: zsh-autosuggestions and zsh-syntax-highlighting. |
+| [Ghostty](ghostty/.config/ghostty/config) | JetBrains Mono, automatic GitHub light/dark themes, and tab/split shortcuts. |
+| [Git](git/.gitconfig) | Explicit pull behavior, readable conflict markers, and local overrides. |
+| [IdeaVim](ideavim/.ideavimrc) | IntelliJ navigation, refactoring, Git, and run/debug mappings. |
+
+No icon font, replacement core utilities, or language-version badges are required.
+This is a personal configuration, not a general-purpose workstation installer.
+
+## Installation
+
+**Requirements:** Git, Bash, network access, and permission to install packages.
+Run installers as your regular user. Ubuntu requires sudo access, the `universe`
+repository, and an amd64 or arm64 system. The macOS installer installs Homebrew
+if it is missing.
 
 ```sh
-git clone git@github.com:bartlomiej-milosz/dotfiles.git ~/dotfiles
+git clone https://github.com/bartlomiej-milosz/dotfiles.git ~/dotfiles
 cd ~/dotfiles
+```
 
-# macOS: shell tools, Ghostty, and JetBrains Mono via Homebrew
+Choose the command for your system and profile.
+
+### macOS
+
+Install shell tools, Ghostty, and JetBrains Mono:
+
+```sh
 ./scripts/install-macos.sh
+```
 
-# Ubuntu VM / SSH machine: shell tools and SDKMAN
+Use `./scripts/install-macos.sh --cli` for shell tools only.
+
+### Ubuntu
+
+Install shell tools and SDKMAN for a VM or SSH machine:
+
+```sh
 ./scripts/install-ubuntu.sh
-
-# Ubuntu desktop: also VS Code, Ghostty, JetBrains Mono, and GNOME / Adwaita appearance
-./scripts/install-ubuntu.sh --desktop
 ```
 
-| System | Default profile | Desktop packages |
-| --- | --- | --- |
-| macOS | `--desktop` | Ghostty and JetBrains Mono via Homebrew |
-| Ubuntu 24.04 LTS | `--cli` | VS Code, GNOME/Adwaita, JetBrains Mono, Cantarell; Ghostty via Snap |
-| Ubuntu 26.04 LTS | `--cli` | VS Code, Ghostty, GNOME/Adwaita, JetBrains Mono, Adwaita Sans |
-
-Both installers accept `--cli` and `--desktop`. Ubuntu defaults to `--cli`,
-regardless of whether a desktop is detected.
-On Ubuntu, no flag is equivalent to `--cli`:
-
-| Component | `--cli` / no flag | `--desktop` |
-| --- | --- | --- |
-| Git, Stow, Zsh, fzf, nano, Starship, Sheldon | Install and link shell configs | Same |
-| SDKMAN | Install for the current user | Same |
-| VS Code | Skip | Install through Microsoft's signed apt repository |
-| Ghostty and desktop fonts | Skip | Install and link Ghostty config |
-| GNOME session and appearance | Skip | Install packages and apply preferences in a GNOME session |
-
-The installers stop on errors and can be rerun; existing applications are not
-uninstalled. Java versions and other language runtimes are installed separately.
-
-On Ubuntu, enable the standard **universe** repository if your minimal image
-omits it. Most tools come from apt. On 24.04, Starship is installed using its
-upstream installer into `~/.local/bin`; on 26.04 it comes from apt. Sheldon uses
-its upstream binary installer into `~/.local/bin` when not already installed.
-For the desktop profile, Ghostty comes from apt on 26.04 and the Snap package
-(with classic confinement) on 24.04. JetBrains Mono comes from apt.
-No Rust toolchain or Linux Homebrew installation is needed.
-
-Sources: [Starship installation](https://starship.rs/guide/),
-[Sheldon installation](https://sheldon.cli.rs/Installation.html),
-[Ghostty packages](https://ghostty.org/docs/install/binary).
-
-Open a new terminal after installation. On Ubuntu, start `zsh`; optionally make
-it your login shell with `chsh -s /usr/bin/zsh`, then log out and back in.
-An SSH host needs only the CLI profile: the font and window theme belong to
-the computer running the terminal application.
-
-## Developer tools on Ubuntu
-
-**VS Code** is installed by `--desktop` from Microsoft's official signed apt
-repository. Updates arrive through apt. Run `code .` to open the current project
-or `code --version` to verify the installation. The shell uses `code --wait` as
-the visual editor locally when available; SSH sessions use `nano`.
-
-**SDKMAN** is installed by both Ubuntu profiles into `~/.sdkman`. It has no
-official apt package, so the installer uses the official script with
-`rcupdate=false`; the shared Zsh config already loads it. Existing installations
-are reused, and its `zip` and `unzip` dependencies come from apt. Open a new Zsh
-session before using it:
-
-```sh
-sdk version       # verify SDKMAN
-sdk list java     # browse available JDKs
-sdk install java  # optionally install the current default JDK
-```
-
-**JetBrains Toolbox** and its IDEs are installed separately. Download its Linux
-archive, extract it to a permanent location such as `~/.local/opt`, and run
-`./bin/jetbrains-toolbox` from the extracted directory. Toolbox creates an
-application-menu entry on first launch and manages IDE installations and updates.
-Steam and other personal desktop applications are also outside the installer.
-
-Sources: [VS Code on Linux](https://code.visualstudio.com/docs/setup/linux),
-[SDKMAN installation](https://sdkman.io/install/),
-[JetBrains Toolbox installation](https://www.jetbrains.com/help/toolbox-app/installation.html).
-
-## Appearance
-
-### Terminal
-
-Ghostty uses the regular **JetBrains Mono** family, 20 pt, with ligatures disabled.
-The desktop installers install the font automatically. On Ubuntu, `--desktop`
-also installs the GNOME appearance packages and refreshes the font cache.
-Ghostty uses JetBrains Mono independently of the desktop's font preferences.
-
-For an existing Ubuntu desktop installation, rerun:
+For a desktop, also install VS Code, Ghostty, fonts, and a GNOME session:
 
 ```sh
 ./scripts/install-ubuntu.sh --desktop
 ```
 
-Verify the installed terminal font with `fc-match 'JetBrains Mono'`, then reopen Ghostty.
+Both installers accept `--cli` and `--desktop`. macOS defaults to desktop;
+Ubuntu defaults to CLI regardless of whether a desktop session is detected.
 
-The two-line prompt uses the terminal's palette so it follows the light/dark theme.
-It displays the directory, Git branch and changes, an activated Python environment,
-and duration for commands taking at least two seconds. SSH sessions also show the
-hostname. There are no language-version badges or decorative icons.
+Installers add packages, link the selected configuration with Stow, and download
+the two Sheldon plugins. Ubuntu also installs SDKMAN without changing shell rc
+files; its desktop profile installs VS Code through Microsoft's signed apt
+repository and applies GNOME appearance preferences when run in a GNOME session.
+Java versions and other language runtimes are installed separately. Existing
+applications are not removed, and the login shell is not changed. On macOS,
+SDKMAN remains a separate installation and is loaded by Zsh when present.
+
+Existing configuration files are not overwritten or adopted into the repository.
+If Stow reports a conflict, inspect and move the conflicting file aside before
+retrying. Package installation happens before linking, so a link conflict does
+not roll back packages that were already installed.
+
+Open a new terminal after installation. On Ubuntu, run `zsh`; optionally use
+`chsh -s /usr/bin/zsh` and log out and back in to change the login shell.
+An SSH host needs only the CLI profile: fonts and window themes belong to the
+computer running the terminal application.
+
+See [installation notes](docs/installation.md) for package sources and verification
+limits. Inspect the tracked Git identity before using this configuration on your
+own account; a fork should use its owner's name and email.
+
+| Ubuntu component | CLI / no flag | Desktop |
+| --- | --- | --- |
+| Shell tools and SDKMAN | Installed | Installed |
+| VS Code | Skipped | Microsoft apt repository |
+| Ghostty and desktop fonts | Skipped | Installed |
+| GNOME session and Adwaita preferences | Skipped | Installed; preferences applied in a GNOME session |
+
+See [Ubuntu desktop notes](docs/ubuntu-desktop.md) for SDKMAN usage, VS Code,
+GNOME session selection, fonts, and reapplying appearance preferences.
+
+## Shell and appearance
+
+Ghostty uses regular **JetBrains Mono at 20 pt**, with ligatures disabled and an
+opaque background. GitHub Light/Dark follows the system appearance when the
+desktop exposes that preference. Starship uses the terminal palette. Ghostty
+starts Zsh explicitly, independently of the account's login shell.
+
+Example prompt layout:
 
 ```text
-~/projects/api main +2?1 3s
+~/projects/api main !1 3s
 ❯
 ```
 
-Git status uses ordinary characters: `!` modified, `?` untracked, `+` staged,
-`-` deleted, `r` renamed, `=` conflicts, `*` stash, `>` ahead, `<` behind.
-The prompt marker turns red after a failed command.
+The prompt shows an activated Python virtual environment, an SSH hostname when
+applicable, and duration for commands taking at least two seconds. Its marker
+turns red after a failed command. Git status uses ordinary characters:
+`!` modified, `?` untracked, `+` staged, `-` deleted, `r` renamed, `=` conflicts,
+`*` stash, `>` ahead, and `<` behind.
 
-The GitHub theme files live in `ghostty/.config/ghostty/themes/`.
-Automatic appearance switching requires the desktop to expose its light/dark
-preference to Ghostty.
+| Shell behavior | Detail |
+| --- | --- |
+| History | Shared and deduplicated; commands starting with a space are not saved. |
+| Completion | Case-insensitive matching and Emacs/readline-style editing. |
+| fzf | `Ctrl+R` searches history, `Ctrl+T` selects files, `Alt+C` selects a directory. |
+| Autosuggestions | `Ctrl+Space` accepts a suggestion; the right arrow does so at the end of the line. |
+| Fallback | A basic prompt and editing remain available when optional tools are absent. |
 
-### GNOME appearance on Ubuntu
+fzf shortcuts require fzf; autosuggestions require the Sheldon plugin to be
+loaded. Both older Ubuntu fzf integration and `fzf --zsh` are handled.
+No shell aliases, spelling correction, or forced locale are configured.
 
-The desktop installer installs `gnome-session` and applies these user preferences
-when run from a GNOME desktop terminal:
-
-| Setting | Ubuntu 26.04 | Ubuntu 24.04 (GNOME 46) |
-| --- | --- | --- |
-| Interface font | Adwaita Sans 11 | Cantarell 11 |
-| Document font | Adwaita Sans 12 | Sans 11 |
-| Monospace font | JetBrains Mono 11 | JetBrains Mono 11 |
-| Icons and cursor | Adwaita | Adwaita |
-| Legacy GTK applications | Adwaita; Adwaita-dark if dark mode is selected | Same |
-| Window titles | Follow the interface font; close button only | Same |
-| Sound theme | freedesktop | freedesktop |
-
-Ubuntu 24.04 uses Cantarell for the interface; Ubuntu 26.04 uses Adwaita Sans.
-If Adwaita Sans is already installed on 24.04, the configuration script uses it
-too. Both versions use JetBrains Mono for fixed-width text in applications that
-follow GNOME's monospace preference. All fonts used by the installer come from apt.
-
-To apply the preferences again, or after installing over SSH, run from a terminal
-in your desktop session, without sudo:
-
-```sh
-./scripts/configure-gnome.sh
-```
-
-For the standard GNOME Shell, log out, select your user, open the session menu
-(gear icon), and choose **GNOME** before logging in. The Ubuntu session uses its
-own Shell styling and extensions. The installer adds the GNOME session alongside
-Ubuntu; session selection is saved by the login screen. Existing user extensions
-and the light/dark preference are preserved.
-
-On Ubuntu 26.04, install the configured fonts with
-`sudo apt install fonts-adwaita fonts-jetbrains-mono`. Check them with
-`fc-match 'Adwaita Sans'` and `fc-match 'JetBrains Mono'`.
-
-Sources: [GNOME fonts](https://github.com/GNOME/adwaita-fonts),
-[GNOME 48 release notes](https://release.gnome.org/48/),
-[Ubuntu's GNOME customizations](https://help.ubuntu.com/stable/ubuntu-help/gnome-on-ubuntu.html.en).
-
-
-## Shell
-
-- Shared, deduplicated history; commands starting with a space are not saved.
-- Case-insensitive tab completion and normal readline-style keybindings.
-- History suggestions can be accepted with `Ctrl+Space` or the right arrow.
-- Use standard commands such as `ls -lah`, `cd ..`, and `git status`;
-  the shared Zsh config defines no aliases.
-- No command spelling correction, forced locale, or replacement of macOS system utilities.
-- SDKMAN is loaded when present. Both Ubuntu profiles install it automatically;
-  on macOS, install it separately.
-
-The shell still starts with a basic prompt if optional tools are missing.
-Ubuntu's older fzf integration is supported alongside the newer `fzf --zsh` form.
-
-`EDITOR` defaults to `nano`. Locally, `VISUAL` uses `code --wait` when the VS Code
-command is available; over SSH it stays with `nano`. Git follows these settings.
-Put machine-specific paths and editor choices in `~/.zshrc.local`, for example:
-
-```sh
-export EDITOR=nano
-export VISUAL="$EDITOR"
-```
+`EDITOR` defaults to `nano`. On local sessions, `VISUAL` uses `code --wait` if
+that command is available; SSH sessions keep `nano`. Machine-specific settings
+belong in `~/.zshrc.local`, which is loaded after the shared editor defaults.
 
 ### fzf shortcuts
 
@@ -222,27 +157,19 @@ intercepts it, press `Esc` and then `c` instead. Open a new terminal or run
 See the [fzf documentation](https://github.com/junegunn/fzf#key-bindings-for-command-line)
 for more examples and customization.
 
-## Git
-
-The shared config contains only a few everyday defaults:
+## Git defaults
 
 | Setting | Behavior |
 | --- | --- |
-| `user.name`, `user.email` | Commit author identity; change these if you fork the repository |
-| `init.defaultBranch = main` | Use `main` when creating a repository |
-| `push.autoSetupRemote = true` | Set the upstream automatically on the first push |
-| `pull.ff = only` | Update without creating merge commits or rebasing automatically |
-| `fetch.prune = true` | Remove stale remote-tracking branches; keep local branches |
-| `merge.conflictStyle = zdiff3` | Show the common base when presenting conflicts |
-| `diff.algorithm = histogram` | Use histogram matching for diffs |
+| `init.defaultBranch = main` | New repositories start on `main`. |
+| `push.autoSetupRemote = true` | Set an upstream automatically on the first push. |
+| `pull.ff = only` | Stop on divergent histories instead of choosing a merge or rebase. |
+| `fetch.prune = true` | Remove stale remote-tracking branches without removing local branches. |
+| `merge.conflictStyle = zdiff3` | Include the common base in conflict markers. |
+| `diff.algorithm = histogram` | Use histogram matching for diffs. |
 
-If local and remote histories diverge, `git pull` stops so you can explicitly
-choose a merge or rebase. Git aliases and automatic tag publishing, tag pruning,
-stashing, and conflict-resolution reuse are not configured. Use full Git commands,
-such as `git status`, `git add`, `git commit`, and `git push`.
-
-Git loads `~/.gitconfig.local` last for machine-specific overrides, such as a
-work email or `core.editor`. This file is not tracked by the repository.
+Git loads `~/.gitconfig.local` last for overrides such as a work identity or
+`core.editor`. Local override files are not managed by this repository.
 
 ## Ghostty shortcuts
 
@@ -255,60 +182,79 @@ work email or `core.editor`. This file is not tracked by the repository.
 | Close surface | `Ctrl+Shift+W` |
 | Font size | `Ctrl+Shift+=`, `Ctrl+Shift+-`, `Ctrl+Shift+0` |
 
+See [IdeaVim notes](docs/ideavim.md) for the separate IDE mappings and plugin
+requirements. The terminal and IDE have independent keybindings.
+
 ## Linking and maintenance
 
-Each directory mirrors the relevant paths in your home directory:
+Each package mirrors paths in the home directory. Zsh and Git install `.zshrc`
+and `.gitconfig`; Sheldon, Starship, and Ghostty use `.config/`.
 
-| Package | Target |
-| --- | --- |
-| `ghostty` | `~/.config/ghostty/` (desktop only) |
-| `git` | `~/.gitconfig` |
-| `sheldon` | `~/.config/sheldon/` |
-| `starship` | `~/.config/starship.toml` |
-| `zsh` | `~/.zshrc` |
-| `ideavim` | `~/.ideavimrc` (manual, unchanged) |
+If the tools are already installed, use GNU Stow through the helper scripts:
 
 ```sh
-./scripts/sync.sh --cli --dry-run  # check without changing links
-./scripts/sync.sh --cli           # shell configs
-./scripts/sync.sh --desktop       # shell configs + Ghostty
-sheldon lock --update             # update shell plugins
-./scripts/purge.sh                # confirm, then unlink all managed configs
-./scripts/purge.sh ghostty        # unlink just one package
+./scripts/sync.sh --cli --dry-run  # Report conflicts without changing links
+./scripts/sync.sh --cli           # Link shell configuration
+./scripts/sync.sh --desktop       # Also link Ghostty configuration
+sheldon lock --update             # Update shell plugins
 ```
 
-Without a profile, `sync.sh` defaults to desktop on macOS and CLI on Linux.
-A CLI sync does not remove an existing desktop configuration. Conflicting files
-are reported before links are changed; they are never adopted into the repository
-or overwritten. Move conflicting files aside yourself, then rerun the command.
-Unlinking preserves command history, caches, installed applications, and local overrides.
+Without a profile, `sync.sh` selects desktop on macOS and CLI on Linux. All
+selected packages are checked for conflicts before links change. Repeating a sync
+is supported; a CLI sync does not remove an existing desktop configuration.
 
-IdeaVim is intentionally outside automatic installation and cleanup:
+Remove managed links while preserving history, caches, applications, and local
+overrides:
 
 ```sh
+./scripts/purge.sh                # Confirm before unlinking all managed packages
+./scripts/purge.sh ghostty        # Unlink only Ghostty, without a prompt
+```
+
+IdeaVim is outside automatic installation and cleanup. From the repository root:
+
+```sh
+stow --dir="$PWD" --target="$HOME" --simulate ideavim
 stow --dir="$PWD" --target="$HOME" ideavim
+stow --dir="$PWD" --target="$HOME" --delete ideavim
 ```
 
-## Updating an older installation
+Only `~/.ideavimrc` is linked; documentation stays in `docs/`.
 
-Arch Linux and Neovim are no longer managed by this repository. The installers
-do not uninstall previously installed tools or delete their data. Old links to
-removed packages can remain in your home directory; inspect and remove those
-links separately if needed.
+After updating the repository, rerun the appropriate sync profile and open a new
+Zsh session. Reload or restart Ghostty for terminal changes. Run an installer
+when tools or fonts are missing, or to install the expanded Ubuntu desktop profile.
+`sync.sh` only manages links: it does not install packages or apply GNOME settings.
+To reapply desktop preferences, run `./scripts/configure-gnome.sh` from your
+GNOME terminal without sudo.
 
-After pulling changes, run the appropriate `sync.sh` profile and open a new Zsh
-session. Reload Ghostty's configuration or restart the application to apply
-appearance changes. Run the installer if required tools or fonts are missing.
-`sync.sh` only manages dotfile links; it does not install packages or apply GNOME
-preferences. To reapply the desktop appearance, run `./scripts/configure-gnome.sh`
-from a terminal in your GNOME session, without sudo.
+Arch Linux and Neovim are no longer managed. Old links to removed packages or to
+`.ideavimrc-doc` may remain; inspect and remove those obsolete links separately.
+No installer deletes previous application data.
 
 ## Validation
 
-Shell syntax, ShellCheck, Ghostty configuration, shell startup, prompt rendering,
-and Stow linking/conflict handling have been checked locally on macOS.
-The Ubuntu installer and GNOME configuration have also been checked for shell
-syntax, profile selection, repeated runs, and font detection. Package installation
-and desktop writes were simulated for those checks. The required desktop packages
-and SDKMAN are installed on the current Ubuntu 26.04 machine; end-to-end
-installation on a fresh Ubuntu machine has not yet been verified.
+With Bash, Zsh, ShellCheck, and GNU Stow on PATH:
+
+```sh
+./scripts/check.sh
+```
+
+The offline suite checks:
+
+- Bash/Zsh syntax and ShellCheck for Bash scripts.
+- `Ctrl+Space` with a mock Sheldon: widget present, widget absent, and Sheldon absent.
+- Basic shell fallback without optional tools.
+- Stow dry runs, both profiles, repeated sync, and single/all-package unlinking.
+- Conflicts rejected before partial linking; local history, overrides, and caches preserved.
+- Manual IdeaVim installation containing only its configuration file.
+
+Tests use temporary homes and target directories. They do not download plugins,
+run installers, or change the active terminal configuration. The suite has been
+run locally on macOS; [GitHub Actions](.github/workflows/check.yml) is configured
+to run the same checks on Ubuntu 24.04.
+
+Full installation on a fresh macOS or Ubuntu system is not covered by this suite.
+Ghostty rendering and IdeaVim behavior inside IntelliJ also require manual
+verification. Package-source checks are documented in the
+[installation notes](docs/installation.md).
